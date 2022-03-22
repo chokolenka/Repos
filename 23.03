@@ -1,0 +1,338 @@
+SQLite version 3.38.0 2022-02-22 18:58:40
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> .open northwind.db
+sqlite> .tables
+categories              employees               shippers
+customer_customer_demo  order_details           suppliers
+customer_demographics   orders                  territories
+customers               products                us_states
+employee_territories    region
+sqlite> .schema territory_description
+sqlite> .schema region
+CREATE TABLE region (
+    region_id smallint NOT NULL PRIMARY KEY,
+    region_description bpchar NOT NULL
+);
+sqlite> select territory_description, region_description from terrirories natural join region;
+Parse error: no such table: terrirories
+sqlite> .schema territories
+CREATE TABLE territories (
+    territory_id character varying(20) NOT NULL PRIMARY KEY,
+    territory_description bpchar NOT NULL,
+    region_id smallint NOT NULL,
+FOREIGN KEY (region_id) REFERENCES region
+);
+sqlite> .mode box
+sqlite> .schema region
+CREATE TABLE region (
+    region_id smallint NOT NULL PRIMARY KEY,
+    region_description bpchar NOT NULL
+);
+sqlite> select territory_description, region_description from territories
+   ...> natural join region;
+┌───────────────────────┬────────────────────┐
+│ territory_description │ region_description │
+├───────────────────────┼────────────────────┤
+│ Westboro              │ Eastern            │
+│ Bedford               │ Eastern            │
+│ Georgetow             │ Eastern            │
+│ Boston                │ Eastern            │
+│ Cambridge             │ Eastern            │
+│ Braintree             │ Eastern            │
+│ Providence            │ Eastern            │
+│ Hollis                │ Northern           │
+│ Portsmouth            │ Northern           │
+│ Wilton                │ Eastern            │
+│ Morristown            │ Eastern            │
+│ Edison                │ Eastern            │
+│ New York              │ Eastern            │
+│ New York              │ Eastern            │
+│ Mellvile              │ Eastern            │
+│ Fairport              │ Eastern            │
+│ Philadelphia          │ Northern           │
+│ Neward                │ Eastern            │
+│ Rockville             │ Eastern            │
+│ Greensboro            │ Eastern            │
+│ Cary                  │ Eastern            │
+│ Columbia              │ Southern           │
+│ Atlanta               │ Southern           │
+│ Savannah              │ Southern           │
+│ Orlando               │ Southern           │
+│ Tampa                 │ Southern           │
+│ Louisville            │ Eastern            │
+│ Beachwood             │ Northern           │
+│ Findlay               │ Northern           │
+│ Southfield            │ Northern           │
+│ Troy                  │ Northern           │
+│ Bloomfield Hills      │ Northern           │
+│ Racine                │ Northern           │
+│ Roseville             │ Northern           │
+│ Minneapolis           │ Northern           │
+│ Hoffman Estates       │ Western            │
+│ Chicago               │ Western            │
+│ Bentonville           │ Southern           │
+│ Dallas                │ Southern           │
+│ Austin                │ Southern           │
+│ Denver                │ Western            │
+│ Colorado Springs      │ Western            │
+│ Phoenix               │ Western            │
+│ Scottsdale            │ Western            │
+│ Santa Monica          │ Western            │
+│ Menlo Park            │ Western            │
+│ San Francisco         │ Western            │
+│ Campbell              │ Western            │
+│ Santa Clara           │ Western            │
+│ Santa Cruz            │ Western            │
+│ Bellevue              │ Western            │
+│ Redmond               │ Western            │
+│ Seattle               │ Western            │
+└───────────────────────┴────────────────────┘
+sqlite> select company_name, contact_name from customers
+   ...> natural join orders
+   ...> limit 10;
+┌───────────────────────────┬──────────────────┐
+│       company_name        │   contact_name   │
+├───────────────────────────┼──────────────────┤
+│ Vins et alcools Chevalier │ Paul Henriot     │
+│ Toms Spezialitaten        │ Karin Josephs    │
+│ Hanari Carnes             │ Mario Pontes     │
+│ Victuailles en stock      │ Mary Saveley     │
+│ Supremes delices          │ Pascale Cartrain │
+│ Hanari Carnes             │ Mario Pontes     │
+│ Chop-suey Chinese         │ Yang Wang        │
+│ Richter Supermarkt        │ Michael Holz     │
+│ Wellington Importadora    │ Paula Parente    │
+│ HILARION-Abastos          │ Carlos Hernandez │
+└───────────────────────────┴──────────────────┘
+sqlite>select company_name, contact_name,order_date, last_name, first_name from customers
+natural join orders
+inner join employees on orders.employee_id = employees.employee_id
+limit 10;
+┌───────────────────────────┬──────────────────┬────────────┬───────────┬────────────┐
+│       company_name        │   contact_name   │ order_date │ last_name │ first_name │
+├───────────────────────────┼──────────────────┼────────────┼───────────┼────────────┤
+│ Vins et alcools Chevalier │ Paul Henriot     │ 1996-07-04 │ Buchanan  │ Steven     │
+│ Toms Spezialitaten        │ Karin Josephs    │ 1996-07-05 │ Suyama    │ Michael    │
+│ Hanari Carnes             │ Mario Pontes     │ 1996-07-08 │ Peacock   │ Margaret   │
+│ Victuailles en stock      │ Mary Saveley     │ 1996-07-08 │ Leverling │ Janet      │
+│ Supremes delices          │ Pascale Cartrain │ 1996-07-09 │ Peacock   │ Margaret   │
+│ Hanari Carnes             │ Mario Pontes     │ 1996-07-10 │ Leverling │ Janet      │
+│ Chop-suey Chinese         │ Yang Wang        │ 1996-07-11 │ Buchanan  │ Steven     │
+│ Richter Supermarkt        │ Michael Holz     │ 1996-07-12 │ Dodsworth │ Anne       │
+│ Wellington Importadora    │ Paula Parente    │ 1996-07-15 │ Leverling │ Janet      │
+│ HILARION-Abastos          │ Carlos Hernandez │ 1996-07-16 │ Peacock   │ Margaret   │
+└───────────────────────────┴──────────────────┴────────────┴───────────┴────────────┘
+sqlite>select company_name, contact_name,order_date, last_name, first_name from customers
+natural join orders
+inner join employees on orders.employee_id = employees.employee_id
+where (order_date>'1996-01-01' and order_date<'1997-01-01');
+┌────────────────────────────────────┬─────────────────────────┬────────────┬───────────┬────────────┐
+│            company_name            │      contact_name       │ order_date │ last_name │ first_name │
+├────────────────────────────────────┼─────────────────────────┼────────────┼───────────┼────────────┤
+│ Vins et alcools Chevalier          │ Paul Henriot            │ 1996-07-04 │ Buchanan  │ Steven     │
+│ Toms Spezialitaten                 │ Karin Josephs           │ 1996-07-05 │ Suyama    │ Michael    │
+│ Hanari Carnes                      │ Mario Pontes            │ 1996-07-08 │ Peacock   │ Margaret   │
+│ Victuailles en stock               │ Mary Saveley            │ 1996-07-08 │ Leverling │ Janet      │
+│ Supremes delices                   │ Pascale Cartrain        │ 1996-07-09 │ Peacock   │ Margaret   │
+│ Hanari Carnes                      │ Mario Pontes            │ 1996-07-10 │ Leverling │ Janet      │
+│ Chop-suey Chinese                  │ Yang Wang               │ 1996-07-11 │ Buchanan  │ Steven     │
+│ Richter Supermarkt                 │ Michael Holz            │ 1996-07-12 │ Dodsworth │ Anne       │
+│ Wellington Importadora             │ Paula Parente           │ 1996-07-15 │ Leverling │ Janet      │
+│ HILARION-Abastos                   │ Carlos Hernandez        │ 1996-07-16 │ Peacock   │ Margaret   │
+│ Ernst Handel                       │ Roland Mendel           │ 1996-07-17 │ Davolio   │ Nancy      │
+│ Centro comercial Moctezuma         │ Francisco Chang         │ 1996-07-18 │ Peacock   │ Margaret   │
+│ Ottilies Kaseladen                 │ Henriette Pfalzheim     │ 1996-07-19 │ Peacock   │ Margaret   │
+│ Que Delicia                        │ Bernardo Batista        │ 1996-07-19 │ Peacock   │ Margaret   │
+│ Rattlesnake Canyon Grocery         │ Paula Wilson            │ 1996-07-22 │ Callahan  │ Laura      │
+│ Ernst Handel                       │ Roland Mendel           │ 1996-07-23 │ Dodsworth │ Anne       │
+│ Folk och fa HB                     │ Maria Larsson           │ 1996-07-24 │ Suyama    │ Michael    │
+│ Blondesddsl pere et fils           │ Frederique Citeaux      │ 1996-07-25 │ Fuller    │ Andrew     │
+│ Wartian Herkku                     │ Pirkko Koskitalo        │ 1996-07-26 │ Leverling │ Janet      │
+│ Frankenversand                     │ Peter Franken           │ 1996-07-29 │ Peacock   │ Margaret   │
+│ GROSELLA-Restaurante               │ Manuel Pereira          │ 1996-07-30 │ Callahan  │ Laura      │
+│ White Clover Markets               │ Karl Jablonski          │ 1996-07-31 │ Buchanan  │ Steven     │
+│ Wartian Herkku                     │ Pirkko Koskitalo        │ 1996-08-01 │ Davolio   │ Nancy      │
+│ Split Rail Beer & Ale              │ Art Braunschweiger      │ 1996-08-01 │ Suyama    │ Michael    │
+│ Rattlesnake Canyon Grocery         │ Paula Wilson            │ 1996-08-02 │ Suyama    │ Michael    │
+│ QUICK-Stop                         │ Horst Kloss             │ 1996-08-05 │ Leverling │ Janet      │
+│ Vins et alcools Chevalier          │ Paul Henriot            │ 1996-08-06 │ Suyama    │ Michael    │
+│ Magazzini Alimentari Riuniti       │ Giovanni Rovelli        │ 1996-08-07 │ Davolio   │ Nancy      │
+│ Tortuga Restaurante                │ Miguel Angel Paolino    │ 1996-08-08 │ Callahan  │ Laura      │
+│ Morgenstern Gesundkost             │ Alexander Feuer         │ 1996-08-09 │ Fuller    │ Andrew     │
+│ Berglunds snabbkop                 │ Christina Berglund      │ 1996-08-12 │ Callahan  │ Laura      │
+│ Lehmanns Marktstand                │ Renate Messner          │ 1996-08-13 │ Callahan  │ Laura      │
+│ Berglunds snabbkop                 │ Christina Berglund      │ 1996-08-14 │ Fuller    │ Andrew     │
+│ Romero y tomillo                   │ Alejandra Camino        │ 1996-08-14 │ Peacock   │ Margaret   │
+│ Romero y tomillo                   │ Alejandra Camino        │ 1996-08-15 │ Peacock   │ Margaret   │
+│ LILA-Supermercado                  │ Carlos Gonzalez         │ 1996-08-16 │ Leverling │ Janet      │
+│ Lehmanns Marktstand                │ Renate Messner          │ 1996-08-19 │ Peacock   │ Margaret   │
+│ QUICK-Stop                         │ Horst Kloss             │ 1996-08-20 │ Davolio   │ Nancy      │
+│ QUICK-Stop                         │ Horst Kloss             │ 1996-08-21 │ Callahan  │ Laura      │
+│ Ricardo Adocicados                 │ Janete Limeira          │ 1996-08-22 │ Callahan  │ Laura      │
+│ Reggiani Caseifici                 │ Maurizio Moroni         │ 1996-08-23 │ Peacock   │ Margaret   │
+│ B's Beverages                      │ Victoria Ashworth       │ 1996-08-26 │ King      │ Robert     │
+│ Comercio Mineiro                   │ Pedro Afonso            │ 1996-08-27 │ Callahan  │ Laura      │
+│ Que Delicia                        │ Bernardo Batista        │ 1996-08-27 │ Suyama    │ Michael    │
+│ Tradicao Hipermercados             │ Anabela Domingues       │ 1996-08-28 │ Davolio   │ Nancy      │
+│ Tortuga Restaurante                │ Miguel Angel Paolino    │ 1996-08-29 │ Davolio   │ Nancy      │
+│ Rattlesnake Canyon Grocery         │ Paula Wilson            │ 1996-08-30 │ Peacock   │ Margaret   │
+│ Vins et alcools Chevalier          │ Paul Henriot            │ 1996-09-02 │ Fuller    │ Andrew     │
+│ LILA-Supermercado                  │ Carlos Gonzalez         │ 1996-09-03 │ Suyama    │ Michael    │
+│ Blondesddsl pere et fils           │ Frederique Citeaux      │ 1996-09-04 │ Buchanan  │ Steven     │
+│ Hungry Owl All-Night Grocers       │ Patricia McKenna        │ 1996-09-05 │ Suyama    │ Michael    │
+│ Ricardo Adocicados                 │ Janete Limeira          │ 1996-09-06 │ Peacock   │ Margaret   │
+│ Magazzini Alimentari Riuniti       │ Giovanni Rovelli        │ 1996-09-09 │ Fuller    │ Andrew     │
+│ Die Wandernde Kuh                  │ Rita Muller             │ 1996-09-09 │ Callahan  │ Laura      │
+│ Supremes delices                   │ Pascale Cartrain        │ 1996-09-10 │ Peacock   │ Margaret   │
+│ Godos Cocina Tipica                │ Jose Pedro Freyre       │ 1996-09-11 │ King      │ Robert     │
+│ Tortuga Restaurante                │ Miguel Angel Paolino    │ 1996-09-12 │ Davolio   │ Nancy      │
+│ Old World Delicatessen             │ Rene Phillips           │ 1996-09-13 │ Callahan  │ Laura      │
+│ Romero y tomillo                   │ Alejandra Camino        │ 1996-09-16 │ Davolio   │ Nancy      │
+│ Lonesome Pine Restaurant           │ Fran Wilson             │ 1996-09-17 │ Fuller    │ Andrew     │
+│ Ana Trujillo Emparedados y helados │ Ana Trujillo            │ 1996-09-18 │ King      │ Robert     │
+│ Hungry Owl All-Night Grocers       │ Patricia McKenna        │ 1996-09-19 │ Leverling │ Janet      │
+│ The Big Cheese                     │ Liz Nixon               │ 1996-09-20 │ Callahan  │ Laura      │
+│ Du monde entier                    │ Janine Labrune          │ 1996-09-20 │ Davolio   │ Nancy      │
+│ Die Wandernde Kuh                  │ Rita Muller             │ 1996-09-23 │ Fuller    │ Andrew     │
+│ QUICK-Stop                         │ Horst Kloss             │ 1996-09-24 │ Fuller    │ Andrew     │
+│ Rattlesnake Canyon Grocery         │ Paula Wilson            │ 1996-09-25 │ Davolio   │ Nancy      │
+│ Island Trading                     │ Helen Bennett           │ 1996-09-26 │ Peacock   │ Margaret   │
+│ Rattlesnake Canyon Grocery         │ Paula Wilson            │ 1996-09-27 │ Davolio   │ Nancy      │
+│ Lonesome Pine Restaurant           │ Fran Wilson             │ 1996-09-30 │ Suyama    │ Michael    │
+│ Island Trading                     │ Helen Bennett           │ 1996-10-01 │ Callahan  │ Laura      │
+│ Tortuga Restaurante                │ Miguel Angel Paolino    │ 1996-10-02 │ King      │ Robert     │
+│ Wartian Herkku                     │ Pirkko Koskitalo        │ 1996-10-03 │ Buchanan  │ Steven     │
+│ Island Trading                     │ Helen Bennett           │ 1996-10-03 │ Leverling │ Janet      │
+│ Pericles Comidas clasicas          │ Guillermo Fernandez     │ 1996-10-04 │ King      │ Robert     │
+│ Koniglich Essen                    │ Philip Cramer           │ 1996-10-07 │ Peacock   │ Margaret   │
+│ Save-a-lot Markets                 │ Jose Pavarotti          │ 1996-10-08 │ Dodsworth │ Anne       │
+│ Koniglich Essen                    │ Philip Cramer           │ 1996-10-09 │ Davolio   │ Nancy      │
+│ Bolido Comidas preparadas          │ Martin Sommer           │ 1996-10-10 │ Peacock   │ Margaret   │
+│ Folk och fa HB                     │ Maria Larsson           │ 1996-10-11 │ Fuller    │ Andrew     │
+│ Furia Bacalhau e Frutos do Mar     │ Lino Rodriguez          │ 1996-10-14 │ Peacock   │ Margaret   │
+│ Split Rail Beer & Ale              │ Art Braunschweiger      │ 1996-10-15 │ Peacock   │ Margaret   │
+│ LILA-Supermercado                  │ Carlos Gonzalez         │ 1996-10-16 │ Leverling │ Janet      │
+│ Bon app'                           │ Laurence Lebihan        │ 1996-10-16 │ Dodsworth │ Anne       │
+│ Mere Paillarde                     │ Jean Fresniere          │ 1996-10-17 │ Leverling │ Janet      │
+│ Wartian Herkku                     │ Pirkko Koskitalo        │ 1996-10-18 │ Buchanan  │ Steven     │
+│ Victuailles en stock               │ Mary Saveley            │ 1996-10-21 │ Callahan  │ Laura      │
+│ Hungry Owl All-Night Grocers       │ Patricia McKenna        │ 1996-10-22 │ King      │ Robert     │
+│ Princesa Isabel Vinhos             │ Isabel de Castro        │ 1996-10-23 │ King      │ Robert     │
+│ Frankenversand                     │ Peter Franken           │ 1996-10-24 │ Peacock   │ Margaret   │
+│ Old World Delicatessen             │ Rene Phillips           │ 1996-10-25 │ Peacock   │ Margaret   │
+│ Mere Paillarde                     │ Jean Fresniere          │ 1996-10-28 │ Fuller    │ Andrew     │
+│ Bon app'                           │ Laurence Lebihan        │ 1996-10-29 │ Davolio   │ Nancy      │
+│ Simons bistro                      │ Jytte Petersen          │ 1996-10-29 │ King      │ Robert     │
+│ Frankenversand                     │ Peter Franken           │ 1996-10-30 │ Peacock   │ Margaret   │
+│ Lehmanns Marktstand                │ Renate Messner          │ 1996-10-31 │ Peacock   │ Margaret   │
+│ White Clover Markets               │ Karl Jablonski          │ 1996-11-01 │ Peacock   │ Margaret   │
+│ QUICK-Stop                         │ Horst Kloss             │ 1996-11-04 │ Fuller    │ Andrew     │
+│ Rattlesnake Canyon Grocery         │ Paula Wilson            │ 1996-11-05 │ Leverling │ Janet      │
+│ Familia Arquibaldo                 │ Aria Cruz               │ 1996-11-06 │ Peacock   │ Margaret   │
+│ Die Wandernde Kuh                  │ Rita Muller             │ 1996-11-07 │ Peacock   │ Margaret   │
+│ Split Rail Beer & Ale              │ Art Braunschweiger      │ 1996-11-08 │ King      │ Robert     │
+│ La maison d'Asie                   │ Annette Roulet          │ 1996-11-11 │ Suyama    │ Michael    │
+│ Ernst Handel                       │ Roland Mendel           │ 1996-11-11 │ Davolio   │ Nancy      │
+│ Furia Bacalhau e Frutos do Mar     │ Lino Rodriguez          │ 1996-11-12 │ Leverling │ Janet      │
+│ Piccolo und mehr                   │ Georg Pipps             │ 1996-11-13 │ King      │ Robert     │
+│ Pericles Comidas clasicas          │ Guillermo Fernandez     │ 1996-11-14 │ Callahan  │ Laura      │
+│ Around the Horn                    │ Thomas Hardy            │ 1996-11-15 │ Suyama    │ Michael    │
+│ Die Wandernde Kuh                  │ Rita Muller             │ 1996-11-18 │ Suyama    │ Michael    │
+│ LILA-Supermercado                  │ Carlos Gonzalez         │ 1996-11-19 │ Davolio   │ Nancy      │
+│ La maison d'Asie                   │ Annette Roulet          │ 1996-11-20 │ Buchanan  │ Steven     │
+│ Seven Seas Imports                 │ Hari Kumar              │ 1996-11-21 │ Buchanan  │ Steven     │
+│ Blondesddsl pere et fils           │ Frederique Citeaux      │ 1996-11-22 │ Peacock   │ Margaret   │
+│ QUICK-Stop                         │ Horst Kloss             │ 1996-11-22 │ Davolio   │ Nancy      │
+│ Bon app'                           │ Laurence Lebihan        │ 1996-11-25 │ Leverling │ Janet      │
+│ Drachenblut Delikatessen           │ Sven Ottlieb            │ 1996-11-26 │ Peacock   │ Margaret   │
+│ Eastern Connection                 │ Ann Devon               │ 1996-11-26 │ Davolio   │ Nancy      │
+│ Antonio Moreno Taqueria            │ Antonio Moreno          │ 1996-11-27 │ Leverling │ Janet      │
+│ Galeria del gastronomo             │ Eduardo Saavedra        │ 1996-11-28 │ Callahan  │ Laura      │
+│ Vaffeljernet                       │ Palle Ibsen             │ 1996-11-28 │ King      │ Robert     │
+│ Ernst Handel                       │ Roland Mendel           │ 1996-11-29 │ Fuller    │ Andrew     │
+│ Split Rail Beer & Ale              │ Art Braunschweiger      │ 1996-12-02 │ Callahan  │ Laura      │
+│ Chop-suey Chinese                  │ Yang Wang               │ 1996-12-03 │ Suyama    │ Michael    │
+│ La maison d'Asie                   │ Annette Roulet          │ 1996-12-03 │ Davolio   │ Nancy      │
+│ Queen Cozinha                      │ Lucia Carvalho          │ 1996-12-04 │ Buchanan  │ Steven     │
+│ Hungry Owl All-Night Grocers       │ Patricia McKenna        │ 1996-12-05 │ Peacock   │ Margaret   │
+│ Wolski  Zajazd                     │ Zbyszek Piestrzeniewicz │ 1996-12-05 │ Davolio   │ Nancy      │
+│ Hungry Coyote Import Store         │ Yoshi Latimer           │ 1996-12-06 │ Leverling │ Janet      │
+│ Mere Paillarde                     │ Jean Fresniere          │ 1996-12-09 │ Davolio   │ Nancy      │
+│ Seven Seas Imports                 │ Hari Kumar              │ 1996-12-09 │ Davolio   │ Nancy      │
+│ Folk och fa HB                     │ Maria Larsson           │ 1996-12-10 │ Buchanan  │ Steven     │
+│ Que Delicia                        │ Bernardo Batista        │ 1996-12-11 │ Fuller    │ Andrew     │
+│ Hungry Owl All-Night Grocers       │ Patricia McKenna        │ 1996-12-12 │ Callahan  │ Laura      │
+│ LILA-Supermercado                  │ Carlos Gonzalez         │ 1996-12-12 │ Leverling │ Janet      │
+│ Ernst Handel                       │ Roland Mendel           │ 1996-12-13 │ Peacock   │ Margaret   │
+│ Around the Horn                    │ Thomas Hardy            │ 1996-12-16 │ Callahan  │ Laura      │
+│ Berglunds snabbkop                 │ Christina Berglund      │ 1996-12-16 │ Leverling │ Janet      │
+│ Split Rail Beer & Ale              │ Art Braunschweiger      │ 1996-12-17 │ Davolio   │ Nancy      │
+│ Familia Arquibaldo                 │ Aria Cruz               │ 1996-12-18 │ Dodsworth │ Anne       │
+│ Sante Gourmet                      │ Jonas Bergulfsen        │ 1996-12-18 │ Davolio   │ Nancy      │
+│ Seven Seas Imports                 │ Hari Kumar              │ 1996-12-19 │ Fuller    │ Andrew     │
+│ Bottom-Dollar Markets              │ Elizabeth Lincoln       │ 1996-12-20 │ Peacock   │ Margaret   │
+│ Ernst Handel                       │ Roland Mendel           │ 1996-12-23 │ Suyama    │ Michael    │
+│ Drachenblut Delikatessen           │ Sven Ottlieb            │ 1996-12-23 │ Leverling │ Janet      │
+│ Piccolo und mehr                   │ Georg Pipps             │ 1996-12-24 │ Fuller    │ Andrew     │
+│ Save-a-lot Markets                 │ Jose Pavarotti          │ 1996-12-25 │ Davolio   │ Nancy      │
+│ Hungry Coyote Import Store         │ Yoshi Latimer           │ 1996-12-25 │ Davolio   │ Nancy      │
+│ HILARION-Abastos                   │ Carlos Hernandez        │ 1996-12-26 │ Suyama    │ Michael    │
+│ Frankenversand                     │ Peter Franken           │ 1996-12-27 │ Davolio   │ Nancy      │
+│ Princesa Isabel Vinhos             │ Isabel de Castro        │ 1996-12-27 │ Buchanan  │ Steven     │
+│ Save-a-lot Markets                 │ Jose Pavarotti          │ 1996-12-30 │ Fuller    │ Andrew     │
+│ Vaffeljernet                       │ Palle Ibsen             │ 1996-12-31 │ Callahan  │ Laura      │
+└────────────────────────────────────┴─────────────────────────┴────────────┴───────────┴────────────┘
+Вывести название товаров, доставленных компанией united package за 1996 г.
+select * from shippers; 
+select ship_via from orders limit 20;
+sqlite>
+
+select product_name, company_name, order_date from shippers
+inner join orders on orders.ship_via = shippers.shipper_id
+inner join order_details on orders.order_id = order_details.order_id
+inner join products on order_details.product_id = products.product_id
+where LOWER(company_name) = 'united package' and order_date<'1997-01-01' limit 10;
+
+Создать представление (view), в котором содержится категория продукта, название продукта и цена за единицу продукта
+create view cat_prod as
+select category_name, product_name, unit_price
+from products inner join categories on products.category_id=categories.category_id; 
+SELECT * FROM sqlite_master WHERE type = 'view';сохраненный запрос селект
+drop view if exists cat_prod; удалили представление
+создали заново
+select * from cat_prod;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
