@@ -1,0 +1,262 @@
+Используя представление, вывести количество продуктов в каждой категории и общее количество продуктов
+select category_name, count(*) from cat_prod group by category_name;
+select category_name, count(*) from cat_prod group by category_name
+   ...> union all select '_____','_____'
+   ...> union all select 'Total', count(*) from cat_prod;
+   Создать представление для вывода регионов и территорий
+   create view if not exists reg_ter as
+ select territory_description, region_description from territories
+ inner join region on region.region_id=territories.region_id;
+ .tables
+ select * from territories;
+ insert into territories (territory_id, territory_description, region_id) values (98105, 'ter 1', 1); (добавили)
+ select * from territories; 
+ insert into territories (territory_id, territory_description, region_id) values (98106, 'ter 2', 5);
+ select * from territories;
+ select * from reg_ter;
+ cross join (временные таблицы)декартово произведение
+ create temporary table ranks(name varchar(2));
+ INSERT INTO ranks(name) VALUES('6'),('7'),('8'),('9'),('10'),('В'),('Д'),('К'),('Т');
+sqlite> select * from ranks;
+┌──────┐
+│ name │
+├──────┤
+│ 6    │
+│ 7    │
+│ 8    │
+│ 9    │
+│ 10   │
+│ В    │
+│ Д    │
+│ К    │
+│ Т    │
+└──────┘
+
+create temporary table suits(name varchar(10)); 10 длина строки
+sqlite> INSERT INTO suits(name) VALUES ('пики'),('червы'),('бубны'),('трефы');
+sqlite> select * from suits;
+┌───────┐
+│ name  │
+├───────┤
+│ пики  │
+│ червы │
+│ бубны │
+│ трефы │
+└───────┘
+
+create temporary table cards as SELECT *FROM ranks CROSS JOIN suits;
+sqlite>создать на основе запроса (SELECT * FROM ...)
+select *from cards;
+ select count(*) from cards;
+┌──────────┐
+│ count(*) │
+├──────────┤
+│ 36       │
+└──────────┘
+
+union объединение union all объединение всех
+sqlite> CREATE temporary TABLE t1(v1 INT);
+sqlite> INSERT INTO t1(v1) VALUES(1),(2),(3);
+sqlite> CREATE temporary TABLE t2(v2 INT);
+sqlite> INSERT INTO t2(v2) VALUES(2),(3),(4);
+
+select * from t1 intersect select * from t2;
+┌────┐
+│ v1 │
+├────┤
+│ 2  │
+│ 3  │
+└────┘
+sqlite> select * from t1 except select * from t2;
+┌────┐
+│ v1 │
+├────┤
+│ 1  │
+└────┘
+sqlite> select * from t2 except select * from t1;
+┌────┐
+│ v2 │
+├────┤
+│ 4  │
+└────┘
+
+sqlite> select v1 from t1 inner join t2 on v1=v2;
+┌────┐
+│ v1 │
+├────┤
+│ 2  │
+│ 3  │
+└────┘
+sqlite> select v1 from t1 left join t2 on v1=v2;
+┌────┐
+│ v1 │
+├────┤
+│ 1  │
+│ 2  │
+│ 3  │
+└────┘
+триггер - переключатель при выполнении запросов insert, update, select
+используется для добавлениия данных как бы дважды???
+(для двухступечатой проверки ввода в базу данных)
+Создать триггер, который добавляет в новую таблицу территории при добавлении ее в основную таблицу
+create table new_territories(id INTEGER PRIMARY KEY autoincrement, name text not null);
+
+CREATE TRIGGER insert_territory after insert ON territories
+BEGIN
+    insert into new_territories(name) values(new.territory_description);
+END;
+
+drop trigger if exists insert_territory; удалить триггер
+
+sqlite> select * from territories;
+
+sqlite> insert into territories (territory_id, territory_description, region_id) values (98107, 'new ter 1', 1);
+sqlite> select *from new_territories;
+┌────┬───────────┐
+│ id │   name    │
+├────┼───────────┤
+│ 1  │ new ter 1 │
+└────┴───────────┘
+
+триггер для валидации введенных данных проверки
+Создать триггер, который проверяет название добавляемой территории (название не менее двух букв)
+
+drop trigger if exists validate_territory_before_insert;
+CREATE TRIGGER validate_territory_before_insert
+   BEFORE INSERT ON territories
+BEGIN
+   SELECT
+      CASE
+	WHEN NEW.territory_description NOT LIKE '%__' THEN
+   	  RAISE (ABORT,'Invalid name of territory')
+       END;
+END; ( как объяснить этот триггер - срабатывает перед добавлением в таблицу, выбрать в случае 
+если новое название территории не подходит под шаблон, и тогда сработает триггер
+(первичный ключ - territory_id)
+
+sqlite> insert into territories (territory_id, territory_description, region_id) values (98108, 'new ter 1', 1);
+sqlite> select * from new_territories;
+┌────┬───────────┐
+│ id │   name    │
+├────┼───────────┤
+│ 1  │ new ter 1 │
+│ 2  │ new ter 1 │
+└────┴───────────┘
+
+
+индексы - ускоряет поиск 
+
+cash    в браузере сохраняет историю посещений - сохранение - кэширование
+
+hash    строки - целочисленный код данной строки
+
+удалить индекс drop index ind_territory;
+
+drop index if exists ind_territory;
+create index ind_territory on territories (territory_description);
+select * from territories  where territory_description like 'Redmond'; найти или выбрать
+┌──────────────┬───────────────────────┬───────────┐
+│ territory_id │ territory_description │ region_id │
+├──────────────┼───────────────────────┼───────────┤
+│ 98052        │ Redmond               │ 2         │
+└──────────────┴───────────────────────┴───────────┘
+
+проверить работает ли индекс
+
+объясните мне план запроса вывести названия начинающиеся на букву R%
+EXPLAIN QUERY PLAN 
+SELECT territory_description FROM territories
+WHERE territory_description like 'R%';
+
+
+транзакции - несколько запросов объединеных общей логикой может быть как объединена так и отменена
+
+
+Транзакции (ACID - atomic, consistent, isolation, durable прочный)
+drop table if exists accounts;
+drop table if exists account_changes;
+
+создаем счета
+CREATE TABLE accounts ( 
+	account_no INTEGER NOT NULL, 
+	balance DECIMAL NOT NULL DEFAULT 0,
+	PRIMARY KEY(account_no),
+        CHECK(balance >= 0)
+);
+перевод в одного счета на другой
+
+CREATE TABLE account_changes (
+	change_no integer PRIMARY KEY autoincrement,
+	account_no INTEGER NOT NULL, 
+	flag TEXT NOT NULL, 
+	amount DECIMAL NOT NULL, 
+	changed_at TEXT NOT NULL 
+);
+добавили на счета
+INSERT INTO accounts (account_no,balance) VALUES (100,2000);
+INSERT INTO accounts (account_no,balance) VALUES (200,1000);
+
+изменили аккауны
+изменили баланс
+записать в историю переводов
+действия какая сумма и когда снято
+
+на аккаунт 200 добавили 100 у.е.
+
+BEGIN TRANSACTION;
+UPDATE accounts SET balance = balance - 100 WHERE account_no = 100;
+UPDATE accounts SET balance = balance + 100 WHERE account_no = 200;
+INSERT INTO account_changes(account_no,flag,amount,changed_at) 
+VALUES(100,'-',100,datetime('now'));
+
+INSERT INTO account_changes(account_no,flag,amount,changed_at) 
+VALUES(200,'+',100,datetime('now'));
+
+sqlite> select * from account_changes;
+┌───────────┬────────────┬──────┬────────┬─────────────────────┐
+│ change_no │ account_no │ flag │ amount │     changed_at      │
+├───────────┼────────────┼──────┼────────┼─────────────────────┤
+│ 1         │ 100        │ -    │ 100    │ 2022-03-25 17:31:27 │
+│ 2         │ 200        │ +    │ 100    │ 2022-03-25 17:31:32 │
+└───────────┴────────────┴──────┴────────┴─────────────────────┘
+
+commit; изменения зафиксированы
+
+Снять сумму, превышающую сумму на счету
+BEGIN TRANSACTION;
+UPDATE accounts
+   SET balance = balance - 20000
+ WHERE account_no = 100;
+INSERT INTO account_changes(account_no,flag,amount,changed_at) 
+VALUES(100,'-',20000,datetime('now'));
+
+SELECT * FROM account_changes;
+
+sqlite> select * from accounts;
+┌────────────┬─────────┐
+│ account_no │ balance │
+├────────────┼─────────┤
+│ 100        │ 1900    │
+│ 200        │ 1100    │
+└────────────┴─────────┘
+sqlite> rollback; откат
+sqlite> select *from account_changes;
+┌───────────┬────────────┬──────┬────────┬─────────────────────┐
+│ change_no │ account_no │ flag │ amount │     changed_at      │
+├───────────┼────────────┼──────┼────────┼─────────────────────┤
+│ 1         │ 100        │ -    │ 100    │ 2022-03-25 17:31:27 │
+│ 2         │ 200        │ +    │ 100    │ 2022-03-25 17:31:32 │
+└───────────┴────────────┴──────┴────────┴─────────────────────┘
+
+sqlite> select * from accounts;
+┌────────────┬─────────┐
+│ account_no │ balance │
+├────────────┼─────────┤
+│ 100        │ 1900    │
+│ 200        │ 1100    │
+└────────────┴─────────┘
+
+
+
+
+
