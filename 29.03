@@ -1,0 +1,48 @@
+package com.company;
+
+import java.util.regex.Pattern;
+
+public class Main {
+
+    public static void main(String[] args) {
+	boolean  b= Pattern.matches(".", "1");
+        System.out.println(b);
+    // регулярные выражения
+        b = Pattern.matches(".s", "as");
+        System.out.println(b);
+
+        b = Pattern.matches("a+", "aaa");
+        System.out.println(b);
+
+        b = Pattern.matches("a+b", "aaab");
+        System.out.println(b);
+
+        // начинается на a * количество символов от 0 и более
+        b = Pattern.matches("a.*", "acb");
+        System.out.println(b);
+
+        //Заканчивается на a
+        b = Pattern.matches(".*a", "cba");
+        System.out.println(b);
+
+        //содержит ab
+        b = Pattern.matches(".*ab.*", "cbabsb");
+        System.out.println(b);
+
+        //не содержит a ^ отрицание
+        System.out.println(Pattern.matches("[^a]*", "cbbsd"));
+
+        //Состоит из букв латиницы и включает a
+        System.out.println(Pattern.matches("[a-zA-Z]*a[a-zA-Z]*", "cbbasd"));
+
+        //не должна начинаться на буквы a,b
+        System.out.println(Pattern.matches("[^ab].*", "cab"));
+
+        //строка является вещественным -1.23 ?  обозначает 0 или 1 раз (+- значит любое число) . - любое количество
+        // знаков (многоточие\)
+        System.out.println(Pattern.matches("[-+]?\\d+.?\\d+", "-1.0"));
+
+        // телефон  +375 29 1234567
+        System.out.println(Pattern.matches("[+]375 \\d{2} \\d{7}", "+375 33 7118710"));
+    }
+}
