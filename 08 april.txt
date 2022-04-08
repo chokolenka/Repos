@@ -1,0 +1,153 @@
+package com.company.DataTypes;
+
+public class DataTypes {
+
+        //Write a Java program that reads a number in inches, converts it to meters.
+	public static double inchesToMeters(double inches) {
+        return inches * 0.0254;
+    }
+    //Write a Java program that reads an integer between 0 and 1000 and adds all the digits in the integer.
+    public int sumOfdigits3(int num) {
+        int firstDigit = num % 10;
+        int remainingNumber = num / 10;
+        int SecondDigit = remainingNumber % 10;
+        remainingNumber = remainingNumber / 10;
+        int thirdDigit = remainingNumber % 10;
+        remainingNumber = remainingNumber / 10;
+        int fourthDigit = remainingNumber % 10;
+        int sum = thirdDigit + SecondDigit + firstDigit + fourthDigit;
+        return sum;
+    }
+    //Write a Java program that reads a number and display the square, cube, and fourth power.
+    // Создали масси из 3-х чисел, заполнили.
+    // Метод вернет массив[].
+    public double[] power2_3_4(double val){
+        double pow2=val*val;
+        double pow3=pow2*val;
+        double pow4= Math.pow(val,4);
+        double [] result = new double[3];
+        result[0] = pow2;
+        result[1] = pow3;
+        result[2] = pow4;
+        return result;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(inchesToMeters(1));
+
+
+    }
+
+    }
+
+	
+	
+	
+	package com.company.tests;
+
+import com.company.DataTypes.DataTypes;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class DataTypesTest {
+    DataTypes dataTypes= new DataTypes();
+
+
+
+    @Test
+    public void inchesToMeters(){
+        double meters = DataTypes.inchesToMeters(1);
+        assertEquals(0.0254,meters);
+        //assertEquals(0.0252,meters);
+    }
+
+    @Test
+    public void sumOfDigits3(){
+        assertEquals(6, dataTypes.sumOfdigits3(123));}
+
+    @Test
+        public void power2_3_4(){
+            assertArrayEquals(new double[]{4,8,16}, dataTypes.power2_3_4(2));
+    }
+}
+
+
+
+package com.company.triangles;
+
+public class Triangles {
+    // Function to check if the triangle
+    // is equilateral or isosceles or scalene
+    public static void checkTriangle(int x, int y, int z)
+    {
+        if (!checkIsTriangleExists(x,y,z))
+            System.err.println("Error, the triangle is not valid");
+        // Check for equilateral triangle
+        if (x == y && y == z )
+            System.out.println("Equilateral triangle"); //Равносторонний
+
+            // Check for isosceles triangle
+        else if (x == y || y == z || z == x )
+            System.out.println("Isosceles triangle"); //Равнобедренный
+
+        else if (x*x+y*y==z*z)
+            System.out.println("Rectangular triangle"); //Прямоугольный
+
+            // Otherwise scalene triangle
+        else
+            System.out.println("Scalene triangle"); //Разносторонний
+    }
+
+    public static boolean checkIsTriangleExists(int x, int y, int z){
+        if (x>=y+z||y>=x+z||z>=x+y) return false;
+        return true;
+    }
+
+    // Driver Code
+    public static void main(String[] args)
+    {
+
+        // 1. Данные для разностороннего треугольника не являются корректными, т.к. такого треугольника не существует
+        int x = 1, y = 2, z = 3;
+        // 2. Данные для равнобедренного треугольника не являются корректными, т.к. такого треугольника не существует
+        x = 1; y=1; z=3;
+        // 3. Валидные данные для определения равностороннего треугольника
+        x = 1; y=1; z=1;
+        // 4. Валидные данные для равнобедренного треугольника, которые представляют собой 3 перестановки
+        x = 3; y = 3; z = 4;
+        x = 4; y = 3; z = 3;
+        x = 3; y = 4; z = 3;
+        // 5. Одна из сторон равна 0
+        x = 0; y=2; z = 3;
+        // 6. Одна из сторон отрицательная
+        x = -1; y =2; z = 3;
+        // 7. Все положительные, но сумма двух сторон равна третьей
+        x = 2; y = 3; z = 5;
+        // 8. Три перестановки из 7-го случая
+        x = 2; y = 5; z = 3;
+        x = 3; y = 2; z = 5;
+        x = 3; y = 5; z = 2;
+        // 9. Все положительные, но сумма двух сторон меньше третьей
+        x = 2; y = 3; z = 6;
+        // 10. Три перестановки из предыдущего случая
+        x = 2; y = 6; z = 3;
+        x = 3; y = 2; z = 6;
+        x = 3; y = 6; z = 2;
+        // 11. Все стороны равны нулю
+        x = 0; y = 0; z = 0;
+        // 12. Три вещественных числа
+        //x = 1.1; y = 2.2; z = 3.0;
+        // 13. Неверное число параметров, например два вместо трех
+        x = 1; y = 2;
+        // 14. Кроме ввода, проверяется также ожидаемый результат вывода
+
+        // Function call
+        x = 1; y = 1; z = 1;
+        checkTriangle(x, y, z);
+    }
+}
+
+
+
+
