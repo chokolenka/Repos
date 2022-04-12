@@ -1,0 +1,264 @@
+sqlite> .open dbase.db
+sqlite> .table
+sqlite> create table student(id integer primary key autoincrement, name text, lastname text);
+sqlite> create table info_student(id integer primary key autoincrement, groupp text, id_student integer);
+sqlite> .mode box
+sqlite> .schema student
+CREATE TABLE student(id integer primary key autoincrement, name text, lastname text);
+sqlite> insert into student values(?, "John","Doe"), (?, "Ivan", "Ivanov");
+sqlite> create table student (id integer primary key autoincrement, name text, lastname text);
+sqlite> create table info_student(id integer primary key autoincrement, groupp text, id_student integer);
+sqlite> .schema info_student;
+sqlite> .schema info_student
+CREATE TABLE info_student(id integer primary key autoincrement, groupp text, id_student integer);
+sqlite> insert into student values("John","Doe");
+Parse error: table student has 3 columns but 2 values were supplied
+sqlite> insert into student values(?,"John","Doe");
+sqlite> select * from student
+   ...> select * from student:
+   ...> select * from student;
+Parse error: near "select": syntax error
+  select * from student select * from student: select * from student;
+                        ^--- error here
+sqlite> select * from student;
+1|John|Doe
+sqlite> .mode box
+sqlite> select * from student;
+┌────┬──────┬──────────┐
+│ id │ name │ lastname │
+├────┼──────┼──────────┤
+│ 1  │ John │ Doe      │
+└────┴──────┴──────────┘
+sqlite> insert into student values(?,"Ivan","Ivanov");
+sqlite> select * from student;
+┌────┬──────┬──────────┐
+│ id │ name │ lastname │
+├────┼──────┼──────────┤
+│ 1  │ John │ Doe      │
+│ 2  │ Ivan │ Ivanov   │
+└────┴──────┴──────────┘
+sqlite> insert into info_student values(?,"group1", 1);
+sqlite> insert into info_student values(?,"group1", 2);
+sqlite> select * from info_student;
+┌────┬────────┬────────────┐
+│ id │ groupp │ id_student │
+├────┼────────┼────────────┤
+│ 1  │ group1 │ 1          │
+│ 2  │ group1 │ 2          │
+└────┴────────┴────────────┘
+sqlite> select name.lastname,groupp from student join info_student on student.id=info_student.id_student;
+Parse error: no such column: name.lastname
+  select name.lastname,groupp from student join info_student on student.id=info_
+         ^--- error here
+sqlite> select name,lastname,groupp from student join info_student on student.id=info_student.id_student;
+┌──────┬──────────┬────────┐
+│ name │ lastname │ groupp │
+├──────┼──────────┼────────┤
+│ John │ Doe      │ group1 │
+│ Ivan │ Ivanov   │ group1 │
+└──────┴──────────┴────────┘
+sqlite> insert into info_student values(?,"group1", 3);
+sqlite> select name,lastname,groupp from student join info_student on student.id=info_student.id_student;
+┌──────┬──────────┬────────┐
+│ name │ lastname │ groupp │
+├──────┼──────────┼────────┤
+│ John │ Doe      │ group1 │
+│ Ivan │ Ivanov   │ group1 │
+└──────┴──────────┴────────┘
+sqlite> select name,lastname,groupp from student left join info_student on student.id=info_student.id_student;
+┌──────┬──────────┬────────┐
+│ name │ lastname │ groupp │
+├──────┼──────────┼────────┤
+│ John │ Doe      │ group1 │
+│ Ivan │ Ivanov   │ group1 │
+└──────┴──────────┴────────┘
+sqlite> select name,lastname,groupp from student full join info_student on student.id=info_student.id_student;
+Parse error: RIGHT and FULL OUTER JOINs are not currently supported
+sqlite> select name,lastname,groupp from info_student left join student on student.id=info_student.id_student;
+┌──────┬──────────┬────────┐
+│ name │ lastname │ groupp │
+├──────┼──────────┼────────┤
+│ John │ Doe      │ group1 │
+│ Ivan │ Ivanov   │ group1 │
+│      │          │ group1 │
+└──────┴──────────┴────────┘
+sqlite> SQLite version 3.38.0 2022-02-22 18:58:40
+   ...> Enter ".help" for usage hints.
+   ...> Connected to a transient in-memory database.
+   ...> Use ".open FILENAME" to reopen on a persistent database.
+   ...> sqlite> .open dbase.db
+   ...> sqlite> .tables
+   ...> sqlite> create table student id integer primary key autoincrement, name text.lastname text);
+Parse error: near "SQLite": syntax error
+  SQLite version 3.38.0 2022-02-22 18:58:40 Enter ".help" for usage hints. Conne
+  ^--- error here
+sqlite> Parse error: near "id": syntax error
+   ...>   create table student id integer primary key autoincrement, name text.lastname
+   ...>                        ^--- error here
+   ...> sqlite> create table student id integer primary key autoincrement, name text.lastname text);
+Parse error: near "Parse": syntax error
+  Parse error: near "id": syntax error   create table student id integer primary
+  ^--- error here
+sqlite> Parse error: near "id": syntax error
+   ...>   create table student id integer primary key autoincrement, name text.lastname
+   ...>                        ^--- error here
+   ...> sqlite> create table info_student(id integer primary key autoincrement, group text, id_student integer);
+Parse error: near "Parse": syntax error
+  Parse error: near "id": syntax error   create table student id integer primary
+  ^--- error here
+sqlite> Parse error: near "group": syntax error
+   ...>   nfo_student(id integer primary key autoincrement, group text, id_student integ
+   ...>                                       error here ---^
+   ...> sqlite> create table info_student(id integer primary key autoincrement, info_student.group text, id_student integer);
+Parse error: near "Parse": syntax error
+  Parse error: near "group": syntax error   nfo_student(id integer primary key a
+  ^--- error here
+sqlite> Parse error: near ".": syntax error
+   ...>   id integer primary key autoincrement, info_student.group text, id_student inte
+   ...>                                       error here ---^
+   ...> sqlite> create table student (id integer primary key autoincrement, name text, lastname text);
+Parse error: near "Parse": syntax error
+  Parse error: near ".": syntax error   id integer primary key autoincrement, in
+  ^--- error here
+sqlite> sqlite> create table info_student(id integer primary key autoincrement, groupp text, id_student integer);
+Parse error: near "sqlite": syntax error
+  sqlite> create table info_student(id integer primary key autoincrement, groupp
+  ^--- error here
+sqlite> sqlite> .schema info_student;
+Parse error: near "sqlite": syntax error
+  sqlite> .schema info_student;
+  ^--- error here
+sqlite> sqlite> .schema info_student
+   ...> CREATE TABLE info_student(id integer primary key autoincrement, groupp text, id_student integer);
+Parse error: near "sqlite": syntax error
+  sqlite> .schema info_student CREATE TABLE info_student(id integer primary key
+  ^--- error here
+sqlite> sqlite> insert into student values("John","Doe");
+Parse error: near "sqlite": syntax error
+  sqlite> insert into student values("John","Doe");
+  ^--- error here
+sqlite> Parse error: table student has 3 columns but 2 values were supplied
+   ...> sqlite> insert into student values(?,"John","Doe");
+Parse error: near "Parse": syntax error
+  Parse error: table student has 3 columns but 2 values were supplied sqlite> in
+  ^--- error here
+sqlite> sqlite> select * from student
+   ...>    ...> select * from student:
+   ...>    ...> select * from student;
+Parse error: near "sqlite": syntax error
+  sqlite> select * from student    ...> select * from student:    ...> select *
+  ^--- error here
+sqlite> Parse error: near "select": syntax error
+   ...>   select * from student select * from student: select * from student;
+Parse error: near "Parse": syntax error
+  Parse error: near "select": syntax error   select * from student select * from
+  ^--- error here
+sqlite>                         ^--- error here
+   ...> sqlite> select * from student;
+Parse error: unrecognized token: "^"
+  ^--- error here sqlite> select * from student;
+  ^--- error here
+sqlite> 1|John|Doe
+   ...> sqlite> .mode box
+   ...> sqlite> select * from student;
+Parse error: near "1": syntax error
+  1|John|Doe sqlite> .mode box sqlite> select * from student;
+  ^--- error here
+sqlite> ┌────┬──────┬──────────┐
+   ...> │ id │ name │ lastname │
+   ...> ├────┼──────┼──────────┤
+   ...> │ 1  │ John │ Doe      │
+   ...> └────┴──────┴──────────┘
+   ...> sqlite> insert into student values(?,"Ivan","Ivanov");
+Parse error: near "┌────┬──────┬──────────┐": syntax error
+  ┌────┬──────┬──────────┐ │ i
+  ^--- error here
+sqlite> sqlite> select * from student;
+Parse error: near "sqlite": syntax error
+  sqlite> select * from student;
+  ^--- error here
+sqlite> ┌────┬──────┬──────────┐
+   ...> │ id │ name │ lastname │
+   ...> ├────┼──────┼──────────┤
+   ...> │ 1  │ John │ Doe      │
+   ...> │ 2  │ Ivan │ Ivanov   │
+   ...> └────┴──────┴──────────┘
+   ...> sqlite> insert into info_student values(?,"group1", 1);
+Parse error: near "┌────┬──────┬──────────┐": syntax error
+  ┌────┬──────┬──────────┐ │ i
+  ^--- error here
+sqlite> sqlite> insert into info_student values(?,"group1", 2);
+Parse error: near "sqlite": syntax error
+  sqlite> insert into info_student values(?,"group1", 2);
+  ^--- error here
+sqlite> sqlite> select * from info_student;
+Parse error: near "sqlite": syntax error
+  sqlite> select * from info_student;
+  ^--- error here
+sqlite> ┌────┬────────┬────────────┐
+   ...> │ id │ groupp │ id_student │
+   ...> ├────┼────────┼────────────┤
+   ...> │ 1  │ group1 │ 1          │
+   ...> │ 2  │ group1 │ 2          │
+   ...> └────┴────────┴────────────┘
+   ...> sqlite> select name.lastname,groupp from student join info_student on student.id=info_student.id_student;
+Parse error: near "┌────┬────────┬────────────┐": syntax error
+  ┌────┬────────┬───────────
+  ^--- error here
+sqlite> Parse error: no such column: name.lastname
+   ...>   select name.lastname,groupp from student join info_student on student.id=info_
+   ...>          ^--- error here
+   ...> sqlite> select name,lastname,groupp from student join info_student on student.id=info_student.id_student;
+Parse error: near "Parse": syntax error
+  Parse error: no such column: name.lastname   select name.lastname,groupp from
+  ^--- error here
+sqlite> ┌──────┬──────────┬────────┐
+   ...> │ name │ lastname │ groupp │
+   ...> ├──────┼──────────┼────────┤
+   ...> │ John │ Doe      │ group1 │
+   ...> │ Ivan │ Ivanov   │ group1 │
+   ...> └──────┴──────────┴────────┘
+   ...> sqlite> insert into info_student values(?,"group1", 3);
+Parse error: near "┌──────┬──────────┬────────┐": syntax error
+  ┌──────┬──────────┬───────
+  ^--- error here
+sqlite> sqlite> select name,lastname,groupp from student join info_student on student.id=info_student.id_student;
+Parse error: near "sqlite": syntax error
+  sqlite> select name,lastname,groupp from student join info_student on student.
+  ^--- error here
+sqlite> ┌──────┬──────────┬────────┐
+   ...> │ name │ lastname │ groupp │
+   ...> ├──────┼──────────┼────────┤
+   ...> │ John │ Doe      │ group1 │
+   ...> │ Ivan │ Ivanov   │ group1 │
+   ...> └──────┴──────────┴────────┘
+   ...> sqlite> select name,lastname,groupp from student left join info_student on student.id=info_student.id_student;
+Parse error: near "┌──────┬──────────┬────────┐": syntax error
+  ┌──────┬──────────┬───────
+  ^--- error here
+sqlite> ┌──────┬──────────┬────────┐
+   ...> │ name │ lastname │ groupp │
+   ...> ├──────┼──────────┼────────┤
+   ...> │ John │ Doe      │ group1 │
+   ...> │ Ivan │ Ivanov   │ group1 │
+   ...> └──────┴──────────┴────────┘
+   ...> sqlite> select name,lastname,groupp from student full join info_student on student.id=info_student.id_student;
+Parse error: near "┌──────┬──────────┬────────┐": syntax error
+  ┌──────┬──────────┬───────
+  ^--- error here
+sqlite> Parse error: RIGHT and FULL OUTER JOINs are not currently supported
+   ...> sqlite> select name,lastname,groupp from info_student left join student on student.id=info_student.id_student;
+Parse error: near "Parse": syntax error
+  Parse error: RIGHT and FULL OUTER JOINs are not currently supported sqlite> se
+  ^--- error here
+sqlite> ┌──────┬──────────┬────────┐
+   ...> │ name │ lastname │ groupp │
+   ...> ├──────┼──────────┼────────┤
+   ...> │ John │ Doe      │ group1 │
+   ...> │ Ivan │ Ivanov   │ group1 │
+   ...> │      │          │ group1 │
+   ...> └──────┴──────────┴────────┘
+   ...> sqlite>
+   ...>
+
+
