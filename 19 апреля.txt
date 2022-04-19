@@ -1,0 +1,394 @@
+package com.company.switches;
+
+import java.util.Scanner;
+
+public class SwitchDemo {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the day number of week : ");
+        int day = scanner.nextInt();
+
+        //String dayOfWeek = getDayOfWeek(day);
+        String dayOfWeek = getDayOfWeek2(day);
+
+        System.out.println(dayOfWeek);
+    }
+    public static String getDayOfWeek(int day){
+        String dayOfWeek="";
+        if (day==1) dayOfWeek="Monday";
+        else if (day==2) dayOfWeek="Tuesday";
+        else if (day==3) dayOfWeek="Wednesday";
+        //функция
+        return dayOfWeek;
+    }
+    public static String getDayOfWeek2(int day){
+        String dayOfWeek;
+        switch (day){
+            case 1: dayOfWeek="Monday"; break;
+            case 2: dayOfWeek="Tuesday"; break;
+            case 3: dayOfWeek="Wednesday"; break;
+            default: dayOfWeek=""; break;
+    }
+        return dayOfWeek;
+}
+
+}
+
+//test
+
+
+package com.company.tests;
+
+import com.company.switches.SwitchDemo;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class SwitchDemoTest {
+    @Test
+    public void getDayOfWeek(){
+        assertEquals("Monday", SwitchDemo.getDayOfWeek(1));
+        assertEquals("Tuesday", SwitchDemo.getDayOfWeek(2));
+        assertEquals("", SwitchDemo.getDayOfWeek(-2));
+    }
+
+    @Test
+    public void getDayOfWeek2(){
+        assertEquals("Monday", SwitchDemo.getDayOfWeek2(1));
+        assertEquals("Tuesday", SwitchDemo.getDayOfWeek2(2));
+        assertEquals("", SwitchDemo.getDayOfWeek2(-2));
+    }
+}
+
+
+package com.company.triangles;
+
+public class Triangles {
+    // Function to check if the triangle
+    // is equilateral or isosceles or scalene
+    public static void checkTriangle(int x, int y, int z)
+    {
+        if (!checkIsTriangleExists(x,y,z))
+            System.err.println("Error, the triangle is not valid");
+        // Check for equilateral равносторонний  triangle
+        if (x == y && y == z )
+            System.out.println("Equilateral triangle"); //Равносторонний
+
+            // Check for isosceles triangle
+        else if (x == y || y == z || z == x )
+            System.out.println("Isosceles triangle"); //Равнобедренный
+
+        else if (x*x+y*y==z*z)
+            System.out.println("Rectangular triangle"); //Прямоугольный
+
+            // Otherwise scalene triangle
+        else
+            System.out.println("Scalene triangle"); //Разносторонний
+    }
+
+    public static boolean checkIsTriangleExists(int x, int y, int z){
+        if (x>=y+z||y>=x+z||z>=x+y) return false;
+        return true;
+    }
+
+    // Driver Code
+    public static void main(String[] args)
+    {
+
+        // 1. Данные для разностороннего треугольника не являются корректными, т.к. такого треугольника не существует
+        int x = 1, y = 2, z = 3;
+        // 2. Данные для равнобедренного треугольника не являются корректными, т.к. такого треугольника не существует
+        x = 1; y=1; z=3;
+        // 3. Валидные данные для определения равностороннего треугольника
+        x = 1; y=1; z=1;
+        // 4. Валидные данные для равнобедренного треугольника, которые представляют собой 3 перестановки
+        x = 3; y = 3; z = 4;
+        x = 4; y = 3; z = 3;
+        x = 3; y = 4; z = 3;
+        // 5. Одна из сторон равна 0
+        x = 0; y=2; z = 3;
+        // 6. Одна из сторон отрицательная
+        x = -1; y =2; z = 3;
+        // 7. Все положительные, но сумма двух сторон равна третьей
+        x = 2; y = 3; z = 5;
+        // 8. Три перестановки из 7-го случая
+        x = 2; y = 5; z = 3;
+        x = 3; y = 2; z = 5;
+        x = 3; y = 5; z = 2;
+        // 9. Все положительные, но сумма двух сторон меньше третьей
+        x = 2; y = 3; z = 6;
+        // 10. Три перестановки из предыдущего случая
+        x = 2; y = 6; z = 3;
+        x = 3; y = 2; z = 6;
+        x = 3; y = 6; z = 2;
+        // 11. Все стороны равны нулю
+        x = 0; y = 0; z = 0;
+        // 12. Три вещественных числа
+        //x = 1.1; y = 2.2; z = 3.0;
+        // 13. Неверное число параметров, например два вместо трех
+        x = 1; y = 2;
+        // 14. Кроме ввода, проверяется также ожидаемый результат вывода
+
+        // Function call
+        x = 1; y = 1; z = 1;
+        checkTriangle(x, y, z);
+    }
+}
+
+
+//test
+package com.company.tests;
+
+import com.company.triangles.Triangles;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class TrianglesTest {
+    private final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    private final PrintStream origOut = System.out;
+
+    private final ByteArrayOutputStream outErr = new ByteArrayOutputStream();
+    private final PrintStream origErr = System.err;
+
+    @Test
+    void checkIsTriangleExists() {
+        assertTrue(Triangles.checkIsTriangleExists(1, 1, 1));
+        assertTrue(Triangles.checkIsTriangleExists(2, 2, 3));
+        assertTrue(Triangles.checkIsTriangleExists(3, 4, 5));
+
+        assertFalse(Triangles.checkIsTriangleExists(1, 2, 3));
+        assertFalse(Triangles.checkIsTriangleExists(-1, 2, 3));
+    }
+
+    @BeforeEach
+    public void setStream() {
+        System.setOut(new PrintStream(out));
+        System.setOut(new PrintStream(outErr));
+
+    }
+
+    @AfterEach
+    public void restoreStream() {
+        System.setOut(origOut);
+        System.setOut(origErr);
+    }
+
+    @Test
+    public void hello() {
+        System.out.print("hello");
+        assertEquals("hello", out.toString());
+
+    }
+
+    @Test
+    public void equilateral() {
+        Triangles.checkTriangle(1,1,1);
+        assertEquals("Equilateral triangle\r\n", out.toString());
+    }
+    @Test
+    public void isosceles() {
+        Triangles.checkTriangle(2,2,3);
+        assertEquals("Isosceles triangle\r\n", out.toString());
+    }
+    @Test
+    public void rectangular() {
+        Triangles.checkTriangle(3,4,5);
+        assertEquals("Rectangular triangle\r\n", out.toString());
+    }
+    @Test
+    public void scalene() {
+        Triangles.checkTriangle(3,4,6);
+        assertEquals("Scalene triangle\r\n", out.toString());
+    }
+    @Test
+    public void invalid() {
+        Triangles.checkTriangle(0,4,6);
+        assertEquals("Error, the triangle is not valid\r\n", outErr.toString());
+    }
+}
+
+
+package com.company.DataTypes;
+
+public class DataTypes {
+
+        //Write a Java program that reads a number in inches, converts it to meters.
+	public static double inchesToMeters(double inches) {
+        return inches * 0.0254;
+    }
+    //Write a Java program that reads an integer between 0 and 1000 and adds all the digits in the integer.
+    public int sumOfdigits3(int num) {
+        int firstDigit = num % 10;
+        int remainingNumber = num / 10;
+        int SecondDigit = remainingNumber % 10;
+        remainingNumber = remainingNumber / 10;
+        int thirdDigit = remainingNumber % 10;
+        remainingNumber = remainingNumber / 10;
+        int fourthDigit = remainingNumber % 10;
+        int sum = thirdDigit + SecondDigit + firstDigit + fourthDigit;
+        return sum;
+    }
+    //Write a Java program that reads a number and display the square, cube, and fourth power.
+    // Создали масси из 3-х чисел, заполнили.
+    // Метод вернет массив[].
+    public double[] power2_3_4(double val){
+        double pow2=val*val;
+        double pow3=pow2*val;
+        double pow4= Math.pow(val,4);
+        double [] result = new double[3];
+        result[0] = pow2;
+        result[1] = pow3;
+        result[2] = pow4;
+        return result;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(inchesToMeters(1));
+
+
+    }
+
+    }
+
+	
+	//test
+package com.company.tests;
+
+import com.company.DataTypes.DataTypes;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class DataTypesTest {
+    DataTypes dataTypes= new DataTypes();
+
+
+
+    @Test
+    public void inchesToMeters(){
+        double meters = DataTypes.inchesToMeters(1);
+        assertEquals(0.0254,meters);
+        //assertEquals(0.0252,meters);
+    }
+
+    @Test
+    public void sumOfDigits3(){
+        assertEquals(6, dataTypes.sumOfdigits3(123));}
+
+    @Test
+        public void power2_3_4(){
+            assertArrayEquals(new double[]{4,8,16}, dataTypes.power2_3_4(2));
+    }
+}
+
+
+package com.company.Demo;
+
+import java.util.Arrays;
+
+public class Demo {
+    public static void main(String[] args) {
+        //найти недостающий элемент массива
+        int[] arr = {3, 2, 4, 6, 1};
+
+        //System.out.println(Arrays.toString(arr));
+
+        int missing = getMissing(arr);
+        System.out.println(missing);
+    }
+
+    public static int getMissing(int[] arr) {
+        Arrays.sort(arr);
+        int min = arr[0];
+        int missing = 0;
+        for (int i = 0; i < arr.length; i++)
+            if (arr[i] != min + i) {
+                missing = min + i;
+                break;
+            }
+        return missing;
+    }
+}
+test
+
+package com.company.tests;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class DemoTest {
+    @Test
+    public void getMissing(){
+        assertEquals(5,Demo.getMissing(new int []{3, 2, 4, 6, 1}));
+
+    }
+
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/w3.css">
+    <title>Document</title>
+    <style>
+        td{
+            border:1px solid black;
+            padding:8px;
+        }
+        table{
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>    
+    <form class="w3-container">
+        <div class="w3-section">
+            <label>Regular Expressions</label>
+            <input class="w3-input" type="text" id="regexp">
+       
+        </div>
+        <div class="w3-section">
+            <button type="button" class="w3-btn w3-padding w3-teal" \
+            id="ok" style="width:200px">OK</button>
+        </div>
+    </form>
+    <div id="container" 
+    class="w3-card w3-panel w3-container w3-margin w3-padding-16">
+    </div>
+
+    </form>
+    </div>
+    <script>
+        var table = $('<table>');
+        var tbody = $('<tbody>');
+            for (let i=0; i<10; i++){
+                var tr=$('<tr>');
+                    tbody.append(tr);
+                 for (let j=0; j<10; j++){
+                     var td = $('<td>').html(''+i+'&middot;'+j+'='+i*j)
+                        tr.append(td);
+                 }
+            }
+        table.append(tbody);
+        $('#container').append(table);
+    </script>
+</body>
+</html>
+
+    
+    
+   
