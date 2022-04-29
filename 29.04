@@ -1,0 +1,228 @@
+package com.company;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+public class WiseCounting {
+    public static void main(String[] args) {
+        // делаем после 31
+        Emperor person = new Emperor ("Akbar");
+        ArrayList<Courtier> courtiers = new ArrayList<>();
+        courtiers.add(new Courtier("courtier 1"));
+        courtiers.add(new Courtier("courtier 2"));
+        courtiers.add(new Courtier("courtier 3"));
+        Birbal birbal= new Birbal("Birbal");
+
+        person .asks (0);
+
+        /*for (int i=0; i<courtiers.size(); i++)
+        courtiers.get(i).thinks();
+        for (Courtier courtier:courtiers)
+            courtier.thinks();
+        // для текущего (объекта из коллекции) придворного из
+        // коллекции придворных вызвать (метод) "думать"
+        */
+        courtiers.forEach(Courtier::thinks);
+        birbal.enters();
+        birbal.asks();
+        person.asks(0);
+        birbal.replies();
+        birbal.says();
+    }
+}
+class Person{
+    // final один раз задали и менять не можем
+    private final String name;
+    // мы задаем имя персонажа и объект запоминает имя
+    // конструктор которому мы присвоим имя
+    public Person (String name){
+        this.name = name;
+        }
+
+        public String getName() {
+        return name;
+            // это getter так как имя private (1.имя не читается, 2.может только читаться,
+            //3.может только писаться, 4.читаться и писаться
+            // not r,r,w,rw
+    }
+
+}
+// дочерние класс
+class Emperor extends Person{
+    // расширяет (extends)
+    private final LinkedList<String> questions;
+    public Emperor (String name){
+        super(name);
+        questions = new LinkedList<>();
+//ключевое слово super вызывает конструктор класса Person  т.е. вместо super Emperor
+        // список отличается угловыми скобками, куда помещается текст <>
+        questions.add ("How many crows are in this city?");
+        questions.add ("How can you be sure?");
+    }
+public void looks(){
+    System.out.println(getName()+"glanced at his courtiers");
+}
+
+public void asks (int number){
+    System.out.println(getName()+  " asks: " +questions.get(number));
+       // у коллекции есть метод get по которому можно получить любое из коллекции
+
+}
+}
+// создали императора, дали ему имя, наполнили ему мозг, умел грозно смотреть
+
+class Courtier extends Person {
+
+    public Courtier(String name) {
+        super(name);
+    }
+
+    public void thinks(){
+        System.out.println("Head of the "+getName()+" began to hang low");
+    }
+}
+
+class Birbal extends Person{
+
+    public Birbal(String name) {
+        super(name);
+    }
+
+    public void enters(){
+        System.out.println(getName()+" enter the courtyard");
+    }
+
+    public void asks(){
+        System.out.println(getName()+" asks: "+"May I know the question?");
+    }
+
+    public void replies(){
+        System.out.println(getName()+" replies: There are 50589 crows");
+    }
+
+    public void says(){
+        System.out.println(getName()+" Make you men count, My lord. If you find more \n" +
+                "crows it means some have come to visit their relatives here. \n" +
+                "If you find less number of crows it means some have gone to \n" +
+                "visit their relatives elsewhere");
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="js/jquery.min.js"></script>
+    <script src="js/words.js"></script>
+    <link rel="stylesheet" href="css/w3.css">
+    <title>Document</title>
+    <style>
+        td{
+            border:1px solid black;
+            padding:8px;
+        }
+        table{
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>    
+    <form class="w3-container">
+        <div class="w3-section">
+            <label>Regular Expressions</label>
+            <input class="w3-input" type="text" id="regexp">
+        </div>
+        <div class="w3-section">
+            <button type="button" class="w3-btn w3-padding w3-teal" \
+            id="ok" style="width:100px">OK</button>
+        </div>
+    </form>
+    <div id="container" 
+    class="w3-card w3-panel w3-container w3-margin w3-padding-16">
+    </div>
+
+    </form>
+    </div>
+    <script>
+        var wordsChoosed=[];
+        $('#ok').click(function(){
+            wordsChoosed=[];
+            $('#table').remove();
+            for (let i=0; i<words.length; i++)
+            if (words[i].search($('#regexp').val())!=-1)
+            wordsChoosed.push(words[i]);
+        
+        var table = $('<table>');
+            table.attr('id','table');
+        var tbody = $('<tbody>');
+            for (let i=0; i<10; i++){
+                var tr=$('<tr>');
+                    tbody.append(tr);
+                 for (let j=0; j<10; j++){
+                     var td = $('<td>').html(wordsChoosed[i*10+j])
+                     if (i%2==0) td.addClass('w3-light-gray');
+                        tr.append(td);
+                 }
+            }
+        table.append(tbody);
+        $('#container').append(table);
+        })
+    </script>
+</body>
+</html>
+    
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/w3.css"> 
+</head>
+<body>
+    <div class="w3-sidebar w3-light-grey w3-card-4 w3-animate-left" style="width: 180px; display: block;" id="mySidebar">
+        <div class="w3-bar w3-dark-grey">
+        <span class="w3-bar-item w3-padding-16">Content</span>
+        <button onclick="w3_close()" class="w3-bar-item w3-button w3-right w3-padding-16" title="close Sidebar">×</button>
+        </div>
+        <div class="w3-bar-block">
+        <a class="w3-bar-item w3-button " href="javascript:setSrc('index.html')">Multiple Table</a>
+        <a class="w3-bar-item w3-button" href="javascript:setSrc('index2.html')">English words </a>
+        <a class="w3-bar-item w3-button" href="javascript:setSrc('index3.html')">Font awesome icons</a>
+        </div>
+      </div>
+      
+      <div id="main" style="margin-left: 180px;">
+        <div class="w3-container w3-display-container">
+          <span title="open Sidebar" style="display: none;" id="openNav" class="w3-button w3-transparent w3-display-topleft w3-xlarge" onclick="w3_open()">☰</span>
+          <iframe src="" style="height:650px;width:100%;border:1px solid #ddd" id="iframe">
+        </iframe>
+        </div>        
+        </div> 
+        <script>
+            function w3_open() {
+              document.getElementById("main").style.marginLeft = "180px";
+              document.getElementById("mySidebar").style.width = "180px";
+              document.getElementById("mySidebar").style.display = "block";
+              document.getElementById("openNav").style.display = 'none';
+            }
+            function w3_close() {
+              document.getElementById("main").style.marginLeft = "0";
+              document.getElementById("mySidebar").style.display = "none";
+              document.getElementById("openNav").style.display = "inline-block";
+            } 
+            function setSrc(page){
+                document.getElementById("iframe").src=page;
+            } 
+        </script>
+</body>
+</html>   
+    
+   
+
+
