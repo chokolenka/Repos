@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/jquery.min.js"></script> 
+    <link rel="stylesheet" href="css/w3.css">
+    <title>Document</title>
+</head>
+<body>
+    <div id="container"
+    class="w3-card w3-panel w3-container w3-margin w3-padding-16">
+    
+    </div>
+    
+    <script>
+        var table =$('<table>');
+            var tbody=$('tbody>');
+            table.append(tbody);
+        $('#container').append(table);
+    </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="js/jquery.min.js"></script>
+    <script src="js/words.js"></script>
+    <link rel="stylesheet" href="css/w3.css">
+    <title>Document</title>
+    <style>
+        td{
+            border:1px solid black;
+            padding:8px;
+        }
+        table{
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>    
+    <form class="w3-container">
+        <div class="w3-section">
+            <label>Regular Expressions</label>
+            <input class="w3-input" type="text" id="regexp">
+        </div>
+        <div class="w3-section">
+            <button type="button" class="w3-btn w3-padding w3-teal" \
+            id="ok" style="width:100px">OK</button>
+        </div>
+    </form>
+    <div id="container" 
+    class="w3-card w3-panel w3-container w3-margin w3-padding-16">
+    </div>
+
+    </form>
+    </div>
+    <script>
+        var wordsChoosed=[];
+        $('#ok').click(function(){
+            wordsChoosed=[];
+            $('#table').remove();
+            for (let i=0; i<words.length; i++)
+            if (words[i].search($('#regexp').val())!=-1)
+            wordsChoosed.push(words[i]);
+        
+        var table = $('<table>');
+            table.attr('id','table');
+        var tbody = $('<tbody>');
+            for (let i=0; i<10; i++){
+                var tr=$('<tr>');
+                    tbody.append(tr);
+                 for (let j=0; j<10; j++){
+                     var td = $('<td>').html(wordsChoosed[i*10+j])
+                     if (i%2==0) td.addClass('w3-light-gray');
+                        tr.append(td);
+                 }
+            }
+        table.append(tbody);
+        $('#container').append(table);
+        })
+    </script>
+</body>
+</html>
+    
+
+    
+    
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src='js/jquery.min.js'></script>
+    <script src='js/all.min.js'></script>
+    <script src='js/icons.js'></script>
+    <link rel="stylesheet" type="text/css"href="css/w3.css">
+</head>
+<body>
+    <div id="container"
+    class="w3-card w3-container w3-margin w3-padding-16">
+        </div> 
+    <script>
+        var table = $('<table>');
+            var tbody = $('<tbody>');
+                 for (let i=0; i<10; i++){
+                     var tr=$('<tr>');
+                        tbody.append(tr);
+                         for (let j=0; j<10; j++){
+                             var number = i*10+j;
+                             var icon = $('<i>');
+                                icon.addClass("fas fa-2x");
+                                icon.addClass("fa-"+icons[number]);
+                                icon.css("color", "red");
+                                icon.prop('title',icons[number])
+                             var td=$('<td>').append(icon);
+                                if (i%2==0) td.addClass("w3-light-gray");
+                                tr.append(td);
+                         }
+                 }  
+        table.append(tbody);    
+        $('#container').append(table); 
+    </script>
+</body>
+</html>
+
+
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/w3.css"> 
+</head>
+<body>
+    <div class="w3-sidebar w3-light-grey w3-card-4 w3-animate-left" style="width: 180px; display: block;" id="mySidebar">
+        <div class="w3-bar w3-dark-grey">
+        <span class="w3-bar-item w3-padding-16">Content</span>
+        <button onclick="w3_close()" class="w3-bar-item w3-button w3-right w3-padding-16" title="close Sidebar">×</button>
+        </div>
+        <div class="w3-bar-block">
+        <a class="w3-bar-item w3-button " href="javascript:setSrc('index.html')">Multiple Table</a>
+        <a class="w3-bar-item w3-button" href="javascript:setSrc('index2.html')">English words </a>
+        <a class="w3-bar-item w3-button" href="javascript:setSrc('index3.html')">Font awesome icons</a>
+        </div>
+      </div>
+      
+      <div id="main" style="margin-left: 180px;">
+        <div class="w3-container w3-display-container">
+          <span title="open Sidebar" style="display: none;" id="openNav" class="w3-button w3-transparent w3-display-topleft w3-xlarge" onclick="w3_open()">☰</span>
+          <iframe src="" style="height:650px;width:100%;border:1px solid #ddd" id="iframe">
+        </iframe>
+        </div>        
+        </div> 
+        <script>
+            function w3_open() {
+              document.getElementById("main").style.marginLeft = "180px";
+              document.getElementById("mySidebar").style.width = "180px";
+              document.getElementById("mySidebar").style.display = "block";
+              document.getElementById("openNav").style.display = 'none';
+            }
+            function w3_close() {
+              document.getElementById("main").style.marginLeft = "0";
+              document.getElementById("mySidebar").style.display = "none";
+              document.getElementById("openNav").style.display = "inline-block";
+            } 
+            function setSrc(page){
+                document.getElementById("iframe").src=page;
+            } 
+        </script>
+</body>
+</html>
