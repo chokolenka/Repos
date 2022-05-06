@@ -1,0 +1,47 @@
+package com.company;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+public class MobileCodes {
+    // есть номер телефона определить какому мобю оператору он принадлежит
+    public static void main(String[] args) {
+        //List<String>list = new Arraylist<>() или Linkedlist
+        // коллекция только объектов
+;        Map<Integer, String> hmap = new HashMap<>();
+        //Key,value ключ и значение
+        // значениям аргумента соответсвует значение функции
+        // ключ должен быть уникальным !!!
+        hmap.put(24, "Белтелеком (Максифон)");
+        hmap.put(25, "life");
+        hmap.put(291, "Velcom");
+        hmap.put(292, "МТС");
+        hmap.put(293, "Velcom");
+        hmap.put(294, "Diallog");
+        hmap.put(295, "МТС");
+        hmap.put(296, "Velcom");
+        hmap.put(297, "МТС");
+        hmap.put(298, "МТС");
+        hmap.put(299, "Velcom");
+        hmap.put(33, "МТС");
+        hmap.put(44, "Velcom");
+
+        String phone = "375331234567";
+        Set set = hmap.entrySet();
+        //создаем множество
+        Iterator iterator = set.iterator();
+        //iterator объект при меремещении коллекций
+        //перемещаемся
+        while(iterator.hasNext()){
+            // берем одну пару ключ-значения
+            Map.Entry entry = (Map.Entry) iterator.next();
+            if (phone.indexOf(entry.getKey().toString())==4){
+            // извлекаем значение с помощью getValue
+            System.out.println(entry.getValue());
+            }
+        }
+    }
+
+}
