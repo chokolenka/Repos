@@ -1,0 +1,142 @@
+package com.company;
+
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+
+public class ShopQueue {
+    public static void main(String[] args) {
+        Product water = new Product("water", 2.0);
+        Product bread = new Product("bread", 1.0);
+        Product gum = new Product("gum", 1.5);
+
+        Buyer buyer1 = new Buyer(TypeCustomer.REGULAR);
+        Buyer buyer2 = new Buyer(TypeCustomer.VETERAN);
+        Buyer buyer3 = new Buyer(TypeCustomer.CHILD);
+
+        buyer1.addProduct(water);
+        buyer2.addProduct(bread);
+        buyer2.addProduct(water);
+        buyer3.addProduct(gum);
+
+        PriorityQueue<Buyer> queue = new PriorityQueue<>();
+        queue.add(buyer1);
+        queue.add(buyer2);
+        queue.add(buyer3);
+
+        double sum = 0;
+        Seller seller = new Seller();
+        while (!queue.isEmpty()) {
+            Buyer buyer = queue.poll();
+            sum += seller.calc(buyer);
+            System.out.println(buyer.customer);
+            System.out.println(sum);
+        }
+    }
+}
+
+    class Product {
+        String name;
+        double price;
+
+        public Product(String name, double price) {
+            this.name = name;
+            this.price = price;
+        }
+    }
+
+    enum TypeCustomer {
+        VETERAN, CHILD, REGULAR
+    }
+
+    class Buyer implements Comparable {
+
+        TypeCustomer customer;
+        ArrayList<Product> basket = new ArrayList<>();
+
+        public Buyer(TypeCustomer customer) {
+            this.customer = customer;
+        }
+
+        public void addProduct(Product product) {
+            basket.add(product);
+        }
+
+
+        @Override
+        public int compareTo(Object o) {
+            int index1 = this.customer.ordinal();
+            int index2 = ((Buyer) o).customer.ordinal();
+            System.out.println(index1+ " " +index2);
+            return index1 - index2;
+        }
+    }
+
+    class Seller {
+        public double calc(Buyer byuer) {
+            double sum = byuer.basket.stream()
+                    .mapToDouble(p -> p.price)
+                    .sum();
+            return sum;
+        }
+    }
+
+	
+	package com.company;
+
+import java.util.Stack;
+
+public class CheckBrackets {
+    public static void main(String[] args) {
+        // [2*(2+3)]
+        // (1+2*((3+4)
+        // LIFO -last in, first out - стек (stack)
+        // FIFO - first in, first out -  очередь (queue)
+        String brackets = "()[]{}";
+        String s = "[(2+3]";
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            int index = brackets.indexOf(c);
+            System.out.println(index);
+            if (index != -1) { // Это скобка
+                if (index % 2 == 0) // Это открывающая скобка, т.е. число четное
+                    stack.push(c); //  push кладем
+                else { // Это закрывающая скобка
+                    if (stack.empty()) { // empty смотри пустой ли
+                        System.out.println("Ошибка 1");
+                        break;
+                    }
+                    char c2 = stack.peek(); //  peek просто смотрим скобку но не достаем
+                    int index2 = brackets.indexOf(c2);
+                    if (index-index2==1)
+                        stack.pop(); //  pop берем и удаляем
+                    else System.out.println("Ошибка 2");
+                }
+            }
+            if (!stack.empty()) System.out.println("Ошибка 3");
+        }
+    }
+}
+    /*String brackets = "()[]{}";
+    String s = "[(2+3)+2+2]";
+       s = s.replaceFirst("2", "1");
+                System.out.println(s); */
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
