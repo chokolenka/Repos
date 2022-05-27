@@ -1,0 +1,251 @@
+package com.company;
+//Factory method
+public class PoundOfButter {
+    public static void main(String[] args) {
+       IProducer baker = new Baker();
+       IProduct bread = baker.make(1);
+       IProducer farmer = new Farmer();
+       IProduct butter = farmer.make(bread.getWeight());
+       IProducer judge = new Judge();
+       IProduct decision = judge.make(0);
+        System.out.println("The farmer sold a butter to the baker");
+        System.out.printf("The butter weight is %.2f pounds%n", butter.getWeight());
+        System.out.println("The baker took the farmer to a court");
+        System.out.println("The farmer put the bread on the scale");
+        System.out.printf("The bread weight is also %.2f pounds%n", bread.getWeight());
+        //typecast преобразование типа
+        System.out.printf(((Decision) decision).getDecision());
+    }
+}
+
+    //interface vs abstract class
+    interface IProduct {
+        double getWeight();
+
+        void setWeight(double weight);
+    }
+
+    class Bread implements IProduct {
+        private double weight;
+
+        @Override
+        public double getWeight() {
+            return weight;
+        }
+
+        @Override
+        public void setWeight(double weight) {
+            this.weight = weight;
+        }
+    }
+
+    class Butter implements IProduct {
+        private double weight;
+
+        @Override
+        public double getWeight() {
+            return weight;
+        }
+
+        @Override
+        public void setWeight(double weight) {
+            this.weight = weight;
+
+        }
+    }
+
+    class Decision implements IProduct {
+        private double weight;
+
+        public String getDecision() {
+            return decision;
+        }
+
+        private final String decision = "Don't try to cheat the others";
+
+        @Override
+        public double getWeight() {
+            return 0;
+        }
+
+        @Override
+        public void setWeight(double weight) {
+
+
+        }
+    }
+
+    interface IProducer {
+        IProduct make(double weight);
+    }
+
+    class Farmer implements IProducer {
+
+        @Override
+        public IProduct make(double weight) {
+            IProduct butter = new Butter();
+            butter.setWeight(weight);
+            return butter;
+        }
+    }
+    class Baker implements IProducer {
+
+        @Override
+        public IProduct make(double weight) {
+            IProduct bread = new Bread();
+            bread.setWeight(Math.random()*0.1+0.9);
+            return bread;
+        }
+    }
+class Judge implements  IProducer{
+
+    @Override
+    public IProduct make(double weight) {
+        IProduct decision=new Bread();
+        decision.setWeight(Math.random()*0.1+0.9);
+        return decision;
+    }
+}
+
+package com.company;
+
+import java.util.Scanner;
+
+//Singleton одиночка
+public class WiseOwl {
+    static Singleton wiseOwl;
+
+    public static void main(String[] args) {
+        //Singleton singleton = Singleton.getInstance();
+        //Singleton singleton2 = Singleton.getInstance();
+        //System.out.println(singleton);
+        //System.out.println(singleton2);
+        wiseOwl = Singleton.getInstance();
+        makeEvent("A boy helping an old man to carry a heavy basket");
+        makeEvent("A little girl screamed at her mother");
+        makeEvent("A woman telling another person how she saw an elephant jumping over her fence");
+    }
+    static void makeEvent (String s) {
+        Event event = new Event(s);
+        System.out.println(s);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Will you help (y/n)?");
+        String str = scanner.nextLine();
+        if (str.equals("n"))
+            wiseOwl.incWisdom();
+        System.out.println("wisdom: "+wiseOwl.getWisdom());
+    }
+}
+class Singleton {
+    private static final Singleton instance = new Singleton();// создает экземпляр самого себя
+
+    public int getWisdom() {
+        return wisdom;
+    }
+
+    private int wisdom = 0;
+
+    private Singleton() {
+        System.out.println("New instance is created");
+    }
+
+    public static Singleton getInstance() {
+        return instance;
+    }
+
+    public void incWisdom() {
+        wisdom++;
+    }
+}
+        class Event{
+        private final String name;
+
+            Event(String name) {
+                this.name = name;
+            }
+        }
+
+		
+	package com.company;
+//Bridge мост
+public class LionAndHare {
+    public static void main(String[] args) {
+        Hare hare = new CleverHare();
+        Lion lion = new StupidLion();
+        hare.meetWithLion(lion);
+        lion.meetWithHare(hare);
+    }
+
+}
+abstract class Lion{
+    public boolean intelect; // ум
+    abstract public void meetWithHare(Hare hare); // что произойдет при встрече зайца
+
+}
+abstract class Hare {
+    public boolean intelect; // ум
+
+    abstract public void meetWithLion(Lion lion); // что произойдет при встрече льва
+}
+
+class CleverHare extends Hare{
+
+    public CleverHare() {
+        this.intelect = true;
+    }
+
+    @Override
+    public void meetWithLion(Lion lion) {
+       if (lion.intelect)
+        System.out.println("The lion is clever, my attempt is false");
+       else
+           System.out.println("The lion is stupid, I will try to fool it");
+    }
+}
+class StupidHare extends Hare{
+
+    public StupidHare() {
+        this.intelect = false;
+    }
+
+    @Override
+    public void meetWithLion(Lion lion) {
+        if (lion.intelect)
+            System.out.println("The clever lion! I can't do anything");
+        else
+            System.out.println("The stupid lion! I'm afraid of it");
+    }
+}
+class CleverLion extends Lion{
+
+    public CleverLion() {
+        this.intelect = true;
+    }
+
+    @Override
+    public void meetWithHare(Hare hare) {
+        if (hare.intelect)
+            System.out.println("The hare is clever ! I don't want to eat it");
+        else
+            System.out.println("The hare is stupid! I'd rather eat it");
+
+    }
+}
+    class StupidLion extends Lion{
+
+        public StupidLion() {
+            this.intelect = false;
+        }
+
+        @Override
+public void meetWithHare(Hare hare) {
+        if (hare.intelect)
+            System.out.println("What? Another lion in my jungle");
+        else
+            System.out.println("It is another hare. I'm very hungry");
+
+    }
+}	
+		
+
+
