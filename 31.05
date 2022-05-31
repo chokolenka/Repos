@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>parsing</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+<dependencies>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.22</version>
+        <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.jsoup</groupId>
+        <artifactId>jsoup</artifactId>
+        <version>1.14.3</version>
+    </dependency>
+
+</dependencies>
+
+    <build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <source>13</source>
+                <target>13</target>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+        </project>
+		
+		 public class Product {
+        private String name;
+        private double calories;
+
+        public Product(String name, double calories) {
+
+            this.name
+                    = name;
+            this.calories = calories;
+        }
+
+        @Override
+        public String toString() {
+            return "Product{" +
+                    "name='" + name + '\'' +
+                    ", calories=" + calories +
+                    '}';
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+
+            this.name
+                    = name;
+        }
+
+        public double getCalories() {
+            return calories;
+        }
+
+        public void setCalories(double calories) {
+            this.calories = calories;
+        }
+    }
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+
+public class ProductParser {
+    public static void main(String[] args) throws IOException {
+        //Person person = new Person("John", "Doe", "sdf");
+        //System.out.println(person.toString());
+        Document document = Jsoup.connect("https://calorizator.ru/product/all").get();
+        //$x(".//div/div[1]/table[2]/tbody/tr[2]/td[2]/a")[0].childNodes[0]
+        Elements elements = document.select("table>tbody>tr");
+        System.out.println(elements.size());
+
+        for (Element element:elements) {
+            String name=element.select("td>a").text();
+            double kcal = 0;
+            try{
+                kcal = Double.parseDouble(element.select(":eq(5)").text());
+            }
+            catch (Exception e) {}
+            if (!name.isEmpty())
+            System.out.println(name+" "+kcal);
+        }
+    }
+}
+
+
+public class Person {
+    private String lastname;
+    private String firstname;
+    private String patronymic;
+
+    Person(){}
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "lastname='" + lastname + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", patronymic='" + patronymic + '\'' +
+                '}';
+    }
+    public Person(String lastname, String firstname, String patronymic) {
+        this.lastname = lastname;
+        this.firstname = firstname;
+        this.patronymic = patronymic;
+    }
+    public String getLastname() {
+        return lastname;
+    }
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getPatronymic() {
+        return patronymic;
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
+    }
+
+}
+
+package com.company;
+// Outer Builder  строитель
+public class ThreeLittlePigs {
+    public static void main(String[] args) {
+        Director director = new Director();
+        Builder nifnif = new NifNif();
+        Builder nafnaf = new NafNaf();
+        Builder nufnuf = new NufNuf();
+
+        director.setBuilder(nufnuf);
+        director.getBuilder().buildBase();
+        director.setBuilder(nifnif);
+        director.getBuilder().buildWalls();
+        director.setBuilder(nafnaf);
+        director.getBuilder().buildRoof();
+        director.setBuilder(nufnuf);
+        director.buildHouse();
+    }
+}
+interface Builder{
+    void buildBase();
+    void buildWalls();
+    void buildRoof();
+}
+class NifNif implements Builder{
+
+    @Override
+    public void buildBase() {
+        System.out.println("I build the soil base");
+    }
+
+    @Override
+    public void buildWalls() {
+        System.out.println("I build the clay walls");
+
+    }
+
+    @Override
+    public void buildRoof() {
+        System.out.println("I build the straw roof");
+    }
+}
+class NafNaf implements Builder{
+
+    @Override
+    public void buildBase() {
+        System.out.println("I build the sand base");
+    }
+
+    @Override
+    public void buildWalls() {
+        System.out.println("I build the stick walls");
+
+    }
+
+    @Override
+    public void buildRoof() {
+        System.out.println("I build the leaves roof");
+    }
+}
+class NufNuf implements Builder{
+
+    @Override
+    public void buildBase() {
+        System.out.println("I build the concrete base");
+    }
+
+    @Override
+    public void buildWalls() {
+        System.out.println("I build the stone walls");
+
+    }
+
+    @Override
+    public void buildRoof() {
+        System.out.println("I build the tile roof");
+    }
+}
+
+class Director{
+    public Builder getBuilder() {
+        return builder;
+    }
+
+    private Builder builder;
+
+    public void setBuilder (Builder builder) {
+        this.builder = builder;
+    }
+    public void buildHouse(){
+       // обращается и говорит - сначала построй ...
+        builder.buildBase();
+        builder.buildWalls();
+        builder.buildRoof();
+
+    }
+}
+
