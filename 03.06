@@ -1,0 +1,297 @@
+package 
+com.company
+;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class Players {
+    public static void main(String[] args) {
+        Player player = new Player("alex");
+        
+//System.out.println
+(player.getName());
+        player.working();
+        Player player2  = new Player("ivan");
+        player2.working();
+        
+//System.out.println
+(player2.getName());
+        List<Player> players = new LinkedList<>();
+        players.add(player);
+        players.add(player2);
+
+        Rate rate = new Rate(players);
+
+        players.forEach(p -> System.out.println(p.getName()+" "+
+                p.getRate()));
+
+        rate.change(player);
+        players.forEach(p -> System.out.println(p.getName()+" "+
+                p.getRate()));
+    }
+}
+
+class Player {
+    public Player(String name){
+        this.name=name;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    private String name = null;
+
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+
+    private int rate;
+
+    public void working(){
+        System.out.println(getName()+
+                "Run to the ball and glory!");
+    }
+
+    public void print(){
+        System.out.println("sdf");
+    }
+}
+
+class Game {
+    public byte getSingleGame() {
+        return singleGame;
+    }
+
+    private final byte singleGame;
+    public Game(byte singleGame){
+        this.singleGame=singleGame;
+    }
+}
+
+class GameSeason {
+    private final LinkedList<Game> game;
+
+    public GameSeason(byte singleGame) {
+        game = new LinkedList<>();
+        game.add(new Game((byte)1));
+        game.add(new Game((byte)2));
+        game.add(new Game((byte)3));
+        game.add(new Game((byte)4));
+        game.add(new Game((byte)5));
+    }
+}
+
+class Rate  {
+    public Rate(List<Player> players){
+        players.forEach(player -> player.setRate((int) (Math.random()*101)));
+    }
+
+    public void incRate(Player player){
+        player.setRate(player.getRate()+10);
+        System.out.println(player.getName()+
+                " Congratulations,player. Level up! Enjoy our future games. " +
+                "Rate="+player.getRate());
+    }
+
+    public void decRate(Player player){
+        player.setRate(player.getRate()-10);
+        System.out.println(player.getName() + "Congratulations,player." +
+                "You are loser! Enjoy our future games. Rate="+player.getRate());
+    }
+
+    public void change(Player player){
+        int choice = (int)(Math.random()*2);
+        if (choice==0) incRate(player);
+        else decRate(player);
+    }
+} 
+
+package com.company;
+
+import org.w3c.dom.ls.LSOutput;
+
+public class Mouthology {
+    public static void main(String[] args) {
+        // это которые прописаны ниже new /new
+     Person professor = Person.getBuilder()
+            .setBiology(true)
+            .setEcology(true)
+            .setEscapology(false)
+            .getPerson();
+    System.out.println(professor.toString());
+}
+
+
+
+}
+class Person {
+    private String profession="";//  у каждого своя профессия
+
+    public String getProfession() {
+        return profession;
+    }
+
+    public boolean isBiology() {
+        return biology;
+    }
+
+    public boolean isEcology() {
+        return ecology;
+    }
+
+    public boolean isGeograghy() {
+        return geograghy;
+    }
+
+    public boolean isSwiminology() {
+        return swiminology;
+    }
+
+    public boolean isEscapology() {
+        return escapology;
+    }
+
+    public boolean isMoutology() {
+        return mouthology;
+    }
+    public static Builder getBuilder(){// просим у person  вернуть builder
+        return new Person().new Builder();
+}
+    private boolean biology; // у каждого свои знания
+    private boolean ecology;
+    private boolean geograghy;
+    private boolean swiminology;
+    private boolean escapology;
+    private boolean mouthology;
+
+    // передаем право внутреннему строителю вложенному классу
+    public class Builder{ // Inner class
+    public void setProfession(String profession) {
+        Person.this.profession = profession;// будет ссылаться на объект person
+    }
+
+    public Builder setBiology(boolean biology) {
+        Person.this.biology = biology;
+        return this;// вернуть строителя .. самого себя
+    }
+
+    public Builder setEcology(boolean ecology) {
+        Person.this.ecology = ecology;
+        return this;
+    }
+
+    public Builder setGeograghy(boolean geograghy) {
+        Person.this.geograghy = geograghy;
+        return this;
+    }
+
+    public Builder setSwiminology(boolean swiminology) {
+        Person.this.swiminology = swiminology;
+        return this;
+    }
+
+    public Builder setEscapology(boolean escapology) {
+        Person.this.escapology = escapology;
+        return this;
+    }
+
+    public Builder setMouthology(boolean mouthology) {
+        Person.this.mouthology = mouthology;
+        return this;
+    }
+    public Person getPerson(){
+        return Person. this;// вернули person
+        }
+    }
+}
+
+
+package com.company;
+
+public class Marian {
+    public static void main(String[] args) throws CloneNotSupportedException {
+        Girl marian = new Girl("Marian", true, true, true);
+        System.out.println(marian);
+        Girl notMarian = (Girl) marian.clone();
+        notMarian.setName("notMarian");
+        notMarian.setSilly(false);
+        notMarian.setLazy(false);
+        System.out.println(notMarian);
+    }
+}
+        class Girl implements Cloneable{
+            private String name;// задаем имя
+            private boolean silly;// выбор
+            private boolean little;
+            private boolean lazy;
+
+
+
+            public Girl(String name, boolean silly, boolean little, boolean lazy) {
+                this.name = name;
+                this.silly = silly;
+                this.little = little;
+                this.lazy = lazy;
+            }
+
+            public Girl() {
+                super();
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public boolean isSilly() {
+                return silly;
+            }
+
+            public boolean isLittle() {
+                return little;
+            }
+
+            public boolean isLazy() {
+                return lazy;
+            }
+
+            @Override
+            protected Object clone() throws CloneNotSupportedException {
+                return super.clone();
+            }
+
+            @Override
+            public String toString() {
+                return "Girl{" +
+                        "name='" + name + '\'' +
+                        ", silly=" + silly +
+                        ", little=" + little +
+                        ", lazy=" + lazy +
+                        '}';
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public void setSilly(boolean silly) {
+                this.silly = silly;
+            }
+
+            public void setLittle(boolean little) {
+                this.little = little;
+            }
+
+            public void setLazy(boolean lazy) {
+                this.lazy = lazy;
+            }
+        }
+
+
+		
+		https://automated-testing.info/t/pishem-testy-na-selenium-ide-passhirenie-k-brauzeru-firefox/2455
