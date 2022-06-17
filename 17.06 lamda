@@ -1,0 +1,197 @@
+package com.company;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class Main {
+
+    public static void main(String[] args) {
+        List<Person> persons = Arrays.asList(
+                        new Person("Иван", "Иванов"),
+                        new Person("Иван", "Петров"),
+                        new Person("Петр", "Иванов")
+                );
+        /*
+        Collections.sort(persons, new Comparator<Person>() {
+            @Override
+            public int compare(Person o1, Person o2) {
+                return o1.getSurname().compareTo(o2.getSurname());
+            }
+        });
+        */
+                persons.sort(Comparator.comparing(Person::getSurname));
+                persons.forEach(System.out::println);
+            }
+        }
+
+
+		
+package com.company;
+    public class Person {
+        public Person() {
+        }
+
+        String name;
+        String surname;
+
+        public Person(String name, String surname) {
+
+
+            this.name
+                    = name;
+            this.surname = surname;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getSurname() {
+            return surname;
+        }
+    }
+
+
+
+package com.company;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+    public class IntArray {
+        static int count = 1000;
+
+        public static void main(String[] args) {
+            int[] arr = fillRandom();
+            //printDivisible(arr);
+            System.out.println(Arrays.toString(sortAsc(arr)));
+            System.out.println(Arrays.toString(sortDesc(arr)));
+        }
+
+        public static int[] fillOrder() {
+            return IntStream.range(1, count + 1).toArray();
+        }
+
+        public static int[] fillRandom() {
+            Random random = new Random();
+            //count=10    0....10
+            return IntStream.generate(() -> random.nextInt(count) + 1)
+                    .distinct()//убираем одинаковые
+                    .limit(10)
+                    .toArray();
+        }
+
+        public static void print(int[] arr) {
+            System.out.println(
+
+                    Arrays.stream
+                            (arr)//из массива в поток
+
+                            .mapToObj(String::valueOf) //из потока целых чисел переобразовываем в строки
+                            .collect(Collectors.joining(", "))// собираем эти строки в одну
+            );
+        }
+
+         static void printEven(int[] arr) {
+            String s =
+                    Arrays.stream
+                            (arr)
+                            .filter(i -> i % 2 == 0)
+                            .mapToObj(String::valueOf)
+                            .collect(Collectors.joining(", "));
+            System.out.println(s);
+        }
+
+        //вывести все числа которые делятся на 3, 5, 11
+
+         static void printDivisible(int[] arr) {
+            long count =
+                    Arrays.stream
+                            (arr)
+                            .filter(i ->i%3==0&&i%5==0&&i%11==0)
+                            .count();
+            System.out.println(count);
+        }
+
+         static int[] sortAsc(int[] arr){
+            int[]result = Arrays.stream(arr)
+                    .sorted()
+                    .toArray();
+            return result;
+        }
+
+        static int[] sortDesc(int[] arr){
+            int[]result = Arrays.stream(arr)
+                    .boxed()
+                    .sorted(Comparator.reverseOrder())
+                    .mapToInt(Integer::intValue )
+                    .toArray();
+            return result;
+        }
+    }
+
+
+	
+package com.company;
+
+import java.util.Comparator;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+public class BuiltinFuncInterfaces {
+    public static void main(String[] args) {
+        // -> лямбда
+        // Придикат// на входе объект - а на выходе true или false !!!
+        // два аргумента на входе и выходе
+        int n =2;
+        Predicate<Integer> isPositive = i->i>0;
+        System.out.println(isPositive.test(2));// positive объект
+        Predicate<Integer>isZero = i->i==0;
+        System.out.println(isZero.test(n));
+        Predicate<Integer>isNegative = isPositive.or(isZero).negate();
+        System.out.println(isZero.test(n));
+
+        //Функция принимает один аргумент на выходе
+        // один аргумент( один объект на вход и один на выход)  !!!
+
+        Function<Person, String> getName = Person::getName;
+        Person person = new Person ("name", "surname");
+        System.out.println(getName.apply(person));
+        Function<String,Character> firstChar = s->s.charAt(0);
+        System.out.println(firstChar.apply("String"));
+
+        // Поставщик
+        Supplier<Person> supplier =Person::new;
+        // создаем объект
+        person = supplier.get();
+        System.out.println(person.getName()); // выдаст null
+
+        // Потребитель
+        Consumer<Person> greeting = p-> System.out.println("Hello,"+p.getName());
+        person = new Person("name", "surname");
+        greeting.accept(person);
+
+        // Сравниватель
+        Comparator<Person> comparator = (p1,p2) -> p1.getName().compareTo(p2.getName());
+        Person person1 = new Person("John", "Doe");
+        Person person2 = new Person("Alice", "Krag");
+        System.out.println(comparator.compare(person1,person2));
+
+        //
+    }
+    // возвращает переменную булевского типа
+    boolean isPositive(Integer i) {// positive метод
+        if (i>0) return true;
+        else return false;
+    }
+}
+	
+
+package lamda	
