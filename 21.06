@@ -1,0 +1,107 @@
+PersonsDemo
+
+package com.company;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class PersonsDemo {
+    public static void main(String[] args) {
+        List<PersonA> persons = new ArrayList<>();
+        persons.add(new PersonB("nameA", "surnameA"));
+        persons.add(new PersonB("name", "surname"));
+        persons.forEach(System.out::println);
+
+        List<PersonA> personsA = new ArrayList<>();
+
+        persons.stream
+                ()
+                .filter(p->p.getName().equals("name"))
+                .forEach(p->personsA.add((PersonB)p));
+        personsA.forEach(System.out::println);
+    }
+}
+
+class PersonA{
+    protected String name;
+    protected String surname;
+
+    public PersonA(String name, String surname) {
+
+        this.name
+                = name;
+        this.surname = surname;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    @Override
+    public String toString() {
+        return "PersonA{" +
+                "name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                '}';
+    }
+    public PersonA(){}
+}
+
+class PersonB extends PersonA{
+    public PersonB(String name, String surname){
+        //super(name, surname)
+        super();
+
+        this.name
+                = name;
+        this.surname = surname;
+    }
+
+    @Override
+    public String toString() {
+        return "PersonB{" +
+                "name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                '}';
+    }
+}
+
+schema.sql
+
+CREATE TABLE firm (
+                       id int NOT NULL AUTO_INCREMENT,
+                       name varchar(45),
+                       PRIMARY KEY (id)
+);
+
+CREATE TABLE os (
+                      id int NOT NULL AUTO_INCREMENT,
+                      name varchar(45),
+                      developer varchar(45),
+                      PRIMARY KEY (id)
+);
+
+CREATE TABLE smartphone (
+                            id int NOT NULL AUTO_INCREMENT,
+                             firm_id int NOT NULL,
+                             os_id int NOT NULL,
+                             size float,
+                             color text,
+                             PRIMARY KEY (id),
+                             CONSTRAINT role_fk FOREIGN KEY (firm_id) REFERENCES firm (id),
+                             CONSTRAINT user_fk FOREIGN KEY (os_id) REFERENCES os (id)
+);
+
+spring.datasource.url=jdbc:h2:file:C:/June/base.db
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.open-in-view=true
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.hibernate.ddl-auto=none/ create
+spring.mvc.hiddenmethod.filter.enabled=true
+
+
