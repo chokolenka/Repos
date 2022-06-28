@@ -1,0 +1,147 @@
+создаем в maven
+
+public class ThreadDemo extends Thread {
+    public static void main(String[] args) throws InterruptedException {
+        //System.out.println("Thread: " +Thread.currentThread().getName());
+
+        System.out.println("Creating thread");
+        Thread thread = new ThreadDemo();
+
+        System.out.println("Starting thread");
+        thread.start();
+
+        System.out.println("Creating thread");
+        Thread thread2 = new ThreadDemo();
+
+        System.out.println("Starting thread");
+        thread2.start();
+
+        try {
+            thread.join();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(Thread.currentThread().getName()+" is finished");
+
+    }
+
+    @Override
+    public void run() {
+        for (int i=0; i<3; i++) {
+            try {
+                Thread.sleep(100);
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName() + " is running");
+        }
+        System.out.println(Thread.currentThread().getName()+" is finished");
+    }
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>SeleniunGithub</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <properties>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.8.2</version>
+        </dependency>
+    </dependencies>
+
+</project>
+
+
+public class Runners {
+    public static void main(String[] args) {
+        Runner1 runner1 = new Runner1();
+        Runner2 runner2 = new Runner2();
+
+        Thread thread1 = new Thread(runner1);
+        Thread thread2 = new Thread(runner2);
+
+        //thread1.setPriority(1);
+        //thread2.setPriority(9);
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        thread1.interrupt();
+        thread2.interrupt();
+
+    }
+}
+// бегун
+class Runner1 implements Runnable{
+
+    @Override
+    public void run() {
+        long begin = System.currentTimeMillis();
+        long end = begin+300;
+       //for (int i=0; i<5; i++) {
+        // выполнение действийй в течение определенного промежутка времени
+        //while (System.currentTimeMillis()<end) {
+        // БЕСКОНЕЧНЫЙ ЦИКЛ
+        while (true){
+            System.out.println("Runner 1 is running");
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                break;
+            }
+        }
+
+        }
+
+    }
+
+class Runner2 implements Runnable{
+
+    @Override
+    public void run() {
+        //for (int i=0; i<5; i++) {
+            System.out.println("Runner 2 is running");
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
