@@ -1,0 +1,209 @@
+https://cloudinary.com/
+
+https://www.uuidgenerator.net/
+
+https://cloudinary.com/console/c-27859a52b25c7a94fb08eeb1de7404/welcome
+
+https://www.postman.com/cloudinaryteam/workspace/programmable-media/request/16080251-1b03a3dc-2e88-4ff1-a490-9d6d247d74b1
+
+https://rapidapi.com/hub
+
+
+https://www.codewars.com/
+
+https://www.codewars.com/kata/595970246c9b8fa0a8000086/train/javascript
+
+https://www.cdnpkg.com/chai/file/chai.min.js/
+
+https://www.cdnpkg.com/mocha/file/mocha.min.js/
+
+Your coworker was supposed to write a simple helper function to capitalize a string (that contains a single word) before they went on vacation.
+
+Unfortunately, they have now left and the code they gave you doesn't work. Fix the helper function they wrote so that it works as intended (i.e. make the first character in the string "word" upper case).
+
+Don't worry about numbers, special characters, or non-string types being passed to the function. The string lengths will be from 1 character up to 10 characters, but will never be empty. 
+
+
+mocha.setup('bdd');
+        chai.config.truncateThreshold посмотреть в интернете
+		
+		https://www.cdnpkg.com/mocha/file/mocha.min.css/ стили
+		
+		
+		You are going to be given a word. Your job is to return the middle character of the word. 
+            If the word's length is odd, return the middle character. If the word's length is even, 
+            return the middle 2 characters.
+            
+            #Examples:          
+            Kata.getMiddle("test") should return "es"
+            Kata.getMiddle("testing") should return "t"
+            Kata.getMiddle("middle") should return "dd"
+            Kata.getMiddle("A") should return "A" 
+			
+			
+			https://www.codewars.com/kata/56747fd5cb988479af000028
+			
+			
+			https://www.codewars.com/kata/595970246c9b8fa0a8000086/train/javascript
+			
+			
+			
+			<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width>, initial-scale=1.0">
+    <title>Capitalization</title>
+    <script src="js/chai.min.js/chai.min.js"></script>
+    <script src="js/mocha.min.js/mocha.min.js"></script>
+    <link rel="stylesheet" href="css/mocha.min.css"> 
+</head>
+<body>
+    <pre>
+        <div id="mocha"></div>
+        Your coworker was supposed to write a simple helper 
+        function to capitalize a string (that contains a single word) 
+        before they went on vacation.        
+        Unfortunately, they have now left and the code they gave you 
+        doesn't work. Fix the helper function they wrote so that it 
+        works as intended (i.e. make the first character in the string 
+        "word" upper case).
+        Don't worry about numbers, special characters, 
+        or non-string types being passed to the function. 
+        The string lengths will be from 1 character up to 10 characters, 
+        but will never be empty. 
+    </pre>
+    
+    <script>
+        var word='word';
+
+        console.log(capitalizeWord(word));
+
+        function capitalizeWord(word){
+
+        word = word.charAt(0).toUpperCase() + word.slice(1);
+        
+        return word;
+        }
+
+        mocha.setup('bdd');
+
+        const assert = chai.assert;
+
+        chai.config.truncateThreshold=0;
+        
+        describe("Test of capitalize", ()=>{
+            it("Test 1", ()=>{
+                assert.strictEqual(capitalizeWord('word'),'Word');
+                assert.strictEqual(capitalizeWord('i'),'I');
+                assert.strictEqual(capitalizeWord('glasswear'),'Glasswear');
+            })
+        })
+            mocha.run();
+    </script>
+</body>
+</html>
+
+
+<script>
+        var s='tests';
+        
+        console.log(getMiddle(s));
+
+        function getMiddle(s)
+        {
+            var length = s.length;
+            if(length %2 == 0)
+            return s.charAt(s.length / 2 - 1 ) + s.chaAt(lenght / 2);
+            else
+            return s.charAt(length / 2);
+        }
+
+		
+		 <script>
+var s='tests';
+
+console.log(getMiddle(s));
+
+  function getMiddle(s) { 
+      var length = s.length;
+      if (length%2==0)
+    return s.charAt(length/2-1)+s.charAt(length/2);
+    else
+    return s.charAt(length/2);
+} 
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width>, initial-scale=1.0">
+    <title>get the Middle characters</title>
+    <script src="js/chai.min.js/chai.min.js"></script>
+    <script src="js/mocha.min.js/mocha.min.js"></script>
+    <link rel="stylesheet" href="css/mocha.min.css"> 
+</head>
+<body>
+    <pre>
+        Description:
+        You are going to be given a word. Your job is to return 
+        the middle character of the word. If the word's length is odd, 
+        return the middle character. If the word's length is even, 
+        return the middle 2 characters.
+
+#Examples:
+
+Kata.getMiddle("test") should return "es"
+
+Kata.getMiddle("testing") should return "t"
+
+Kata.getMiddle("middle") should return "dd"
+
+Kata.getMiddle("A") should return "A"
+    </pre>
+    <div id="mocha"></div>
+
+     <script>
+var s='tests';
+
+console.log(getMiddle(s));
+
+  function getMiddle(s) { 
+      var length = s.length;
+      if (length%2==0)
+    return s.charAt(length/2-1)+s.charAt(length/2);
+    else
+    return s.charAt(length/2);
+} 
+
+       mocha.setup('bdd');
+
+        const assert = chai.assert;
+
+        chai.config.truncateThreshold=0;
+        
+        describe("Test of middle of the word", () => {
+            it("Test 1", () => {
+                assert.strictEqual(getMiddle("test"), "es");
+                assert.strictEqual(getMiddle("testing"), "t");
+                assert.strictEqual(getMiddle("middle"), "dd");
+                assert.strictEqual(getMiddle("A"), "A");
+            });
+            it("Test 2", () => {
+                assert.strictEqual(getMiddle(""), "");
+                assert.strictEqual(getMiddle("ab"), "ab");
+                assert.strictEqual(getMiddle("middle"), "dd");
+                assert.strictEqual(getMiddle("A"), "A");
+            });
+        }) 
+            mocha.run();
+    </script>
+</body>
+</html>
+
+
+
+
