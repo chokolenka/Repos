@@ -1,0 +1,371 @@
+https://github.com/KirillovItstep/classworks/tree/main/spring-boot
+
+package org.itstep.helloworldspring;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HelloController {
+
+    @RequestMapping("/")// отображение запроса
+    public String hello(){
+        return "Hello, world!";
+    }
+
+    @RequestMapping("/bye")// отображение запроса
+    public String bye(){
+        return "bye";
+    }
+
+}
+
+
+package org.itstep.helloworldspring;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+public class TestApplication {
+    private static MockMvc mvc;// объект
+
+    @BeforeAll
+    public static void setUp(){
+        mvc = MockMvcBuilders.standaloneSetup(new HelloController()).build();
+    }
+    @Test
+    public void hello() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("Hello, world!")));
+    }
+
+    @Test
+    public void bye() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/bye")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("bye")));
+    }
+
+}
+
+
+
+
+pom.xml для второй папки
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.3</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>org.itstep</groupId>
+    <artifactId>helloworldspring</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>helloworldspring</name>
+    <description>Demo project for Spring Boot</description>
+    <properties>
+        <java.version>11</java.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
+package org.itstep.helloworldspring;
+
+import lombok.AllArgsConstructor;// заполняет все поля
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class User {
+    private Long id;
+    private String username;
+    private String password;
+    private String email;
+}
+
+
+package org.itstep.helloworldspring;
+
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class UserService {
+    List<User> users = new ArrayList<>(){{
+        add(new User(1L, "admin","admin", "admin@gmail.com"));
+        add(new User(2L, "admin","admin", "serv@gmail.com"));
+        add(new User(3L, "admin","admin", "admins@gmail.com"));
+    }};
+
+    public List<User> getUsers() {// вернуть пользователей
+        return users;
+    }
+     public User getUserById(Long id) {
+        User user = users
+                .stream()// создали поток
+                .filter(u->u.getId()==id)
+                .findFirst(). orElse(null );// если нашел с двумя одинаковыми id
+         return user;
+     }
+
+}
+
+
+package org.itstep.helloworldspring;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController// он вывел в json
+public class UserController {
+
+    @Autowired// автоприсоединение
+    UserService userService;
+
+    @RequestMapping("/")// отображение запроса
+    public String hello(){
+        return "Hello, world!";
+    }
+
+    @RequestMapping("/users")// отображение запроса
+    public List<User> getUsers(){
+        return userService.getUsers();
+    }
+
+    @RequestMapping("/user/{id}")// отображение запроса
+    public User getUserById(@PathVariable Long id){
+        return userService.getUserById(id);
+    }
+
+    @RequestMapping("/user")// отображение запроса
+    public User getUserById2(@RequestParam(name ="id") Long id) {
+        return userService.getUserById(id);
+    }
+	}
+DATABASE
+
+package org.itstep.helloworldspring;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class HelloworldSpringApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(HelloworldSpringApplication.class, args);
+    }
+
+}
+
+package org.itstep.helloworldspring;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class UserService {
+    @Autowired
+    UserRepository userRepository;
+
+    public List<User> getUsers() {// вернуть пользователей
+        return userRepository.findAll();
+    }
+     public Optional<User> getUserById(Long id) {
+         return userRepository.findById(id);
+     }
+
+}
+
+package org.itstep.helloworldspring;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController// он вывел в json
+public class UserController {
+
+    @Autowired// автоприсоединение
+    UserService userService;
+
+    @RequestMapping("/")// отображение запроса
+    public String hello(){
+        return "Hello, world!";
+    }
+
+    @RequestMapping("/users")// отображение запроса
+    public List<User> getUsers(){
+        return userService.getUsers();
+    }
+
+    @RequestMapping("/user/{id}")// отображение запроса
+    public Optional<User> getUserById(@PathVariable Long id){
+        return userService.getUserById(id);
+    }
+
+    @RequestMapping("/user")// отображение запроса
+    public Optional<User> getUserById2(@RequestParam(name ="id") Long id) {
+        return userService.getUserById(id);
+    }
+
+}
+
+drop table if exists users;
+
+CREATE TABLE users (
+                         id int NOT NULL AUTO_INCREMENT,
+                         username varchar(45) NOT NULL,
+                         password varchar(64) NOT NULL,
+                         email varchar(45) NOT NULL,
+                         PRIMARY KEY (id)
+);
+
+spring.datasource.url=jdbc:h2:mem:dbase
+spring.datasource.driverClassName=org.h2.Driver
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=update
+
+INSERT INTO users (username, password, email) VALUES ('admin', 'admin', 'admin@gmail.com');
+INSERT INTO users (username, password, email) VALUES ('guest', 'guest', 'guest@gmail.com');
+INSERT INTO users (username, password, email) VALUES ('user', 'user', 'user@gmail.com');
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.3</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>org.itstep</groupId>
+    <artifactId>helloworldspring</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>helloworldspring</name>
+    <description>Demo project for Spring Boot</description>
+    <properties>
+        <java.version>11</java.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
+
