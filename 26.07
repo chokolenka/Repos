@@ -1,0 +1,222 @@
+
+UserService
+
+package org.itstep.helloworldspring;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class UserService {
+    @Autowired
+    UserRepository userRepository;
+
+    public List<User> findAll() { // создаем метод, который сохраняет пользователей в базе данных
+        return userRepository.findAll(); }
+    public Optional<User> findById(Long id) {
+         return userRepository.findById(id);
+     }
+
+     public User save(User user){
+        return userRepository.save(user);
+     }
+    public void deleteById(Long id){
+        userRepository.deleteById(id);
+}
+}
+
+User
+package org.itstep.helloworldspring;
+
+import lombok.AllArgsConstructor;// заполняет все поля
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name="users")
+public class User {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String username;
+    private String password;
+    private String email;
+}
+
+
+UserController
+
+package org.itstep.helloworldspring;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController// он вывел в json
+public class UserController {
+
+    @Autowired// автоприсоединение
+    UserService userService;
+
+    @GetMapping("/")// отображение запроса
+    public String index(){
+        return "index";
+    }
+
+    @GetMapping(value="/users")// отображение запроса
+    public List<User> getUsers(){
+        return userService.findAll();
+    }
+
+    @GetMapping("/user/{id}")// отображение запроса
+    public Optional<User> getUserById(@PathVariable Long id){
+        return userService.findById(id);
+    }
+
+    @PostMapping(value="/users")// отображение запроса
+    User post (@RequestBody User user){
+        return userService.save(user); }
+
+    @PutMapping(value="/users/{id}")// отображение запроса
+    User update (@RequestBody User newUser, @PathVariable Long id){
+        return userService.findById(id).map(user->{
+            user.setUsername(newUser.getUsername());
+            user.setPassword(newUser.getPassword());
+            user.setEmail(newUser.getEmail());
+            return userService.save(user);
+        }).orElseGet(()-> userService.save(newUser));
+    }
+
+    @DeleteMapping(value="/users/{id}")// отображение запроса
+    public void delete (@PathVariable Long id){ userService.deleteById(id); }
+
+}
+application propeties
+
+spring.datasource.url=jdbc:h2:mem:dbase
+spring.datasource.driverClassName=org.h2.Driver
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=update
+spring.h2.console.enabled=true
+
+request.txt
+
+fetch('http://localhost:8080/users')//   метод get
+  .then(res => res.json())
+  .then(console.log)
+
+  fetch('http://localhost:8080/user/1')
+    .then(res => res.json())
+    .then(console.log)
+
+  fetch('http://localhost:8080/users', // метод post
+  {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({username: 'user1', password: 'user1', email:'email'})
+  })
+  .then(function(res){ console.log(res) })
+
+
+  fetch('http://localhost:8080/users/4', // метод put
+    {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "PUT",
+        body: JSON.stringify({username: 'user1', password: 'user2', email:'email'})
+    })
+    .then(function(res){ console.log(res) })
+    // МЕТОД DELETE
+
+
+    fetch('http://localhost:8080/users/4',
+        {
+            method: "DELETE",
+             })
+			 
+			 
+	TestApplication		 
+	
+	package org.itstep.helloworldspring;
+
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class TestApplication {
+    @Autowired
+    private MockMvc mvc;// объект
+
+
+    @Test
+    public void index() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("index")));
+    }
+
+    @Test
+    public void users() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/users")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", Matchers.hasSize(3)))
+                .andExpect(jsonPath("$[0].username", Matchers.equalTo("admin")));
+    }
+    @ParameterizedTest
+    @ValueSource(ints ={ -1,0,1,2,3,Integer.MAX_VALUE})
+    public void getUserById(int id) throws Exception {
+        ResultActions actions = mvc.perform(MockMvcRequestBuilders.get("/user/{id}", id)
+                .accept(MediaType.APPLICATION_JSON));
+        actions
+                .andExpect(status().isOk());
+        switch (id) {
+            case 1:
+                actions
+                        .andExpect(jsonPath("$.username", Matchers.equalTo("admin")));
+                break;
+            case 2:
+                actions
+                        .andExpect(jsonPath("$.username", Matchers.equalTo("admin")));
+                break;
+            case 3:
+                actions
+                        .andExpect(jsonPath("$.username", Matchers.equalTo("admin")));
+                break;
+            default:
+                actions
+                        .andExpect(content().string("null"));
+        }
+    }
+}
