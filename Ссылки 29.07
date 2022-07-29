@@ -1,0 +1,7 @@
+https://online.actitime.com/
+
+https://online.actitime.com/vstu/login.do
+
+https://online.actitime.com/vstu/api/v1/swagger
+
+jmeter -n –t test.jmx -l testresults.jtl 
