@@ -1,0 +1,176 @@
+https://github.com/KirillovItstep/classworks/tree/main/spring-boot
+
+
+pom/xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.3</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>org.itstep</groupId>
+    <artifactId>helloworldspring</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>helloworldspring</name>
+    <description>Demo project for Spring Boot</description>
+    <properties>
+        <java.version>13</java.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
+		
+		https://github.com/KirillovItstep/classworks/tree/main/spring-boot (books100.json)
+		
+		https://github.com/KirillovItstep/classworks/blob/main/BookRepo.java
+		
+	BookRepository	
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import lombok.Getter;
+import lombok.SneakyThrows;
+import org.itstep.restjson.model.Book;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
+
+
+public class BookRepo {
+    //private static final String fileName = "src/main/resources/static/book.json";
+    private static String fileName = null;
+    private ObjectMapper mapper = new ObjectMapper(); // create object mapper instance
+    @Getter
+    private List<Book> books = null;
+
+    public BookRepo(String fileName){
+        this.fileName = fileName;
+    }
+
+    //Read books from file
+    public void readFile(){
+        try {
+          // map = mapper.readValue(Paths.get(fileName).toFile(), Map.class);  // convert JSON file to map
+            books = mapper.readValue(Paths.get(fileName).toFile(), new TypeReference<List<Book>>() {});
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    //Write books to file
+    public void writeFile() throws IOException {
+        ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
+        //writer.writeValue(Paths.get("src/main/resources/static/book2.json").toFile(), books);
+        writer.writeValue(Paths.get(fileName).toFile(), books);
+    }
+
+    //Get all books
+    public List<Book> getAllBooks(){
+        readFile();
+        return books;
+    }
+
+    //Get book by id
+    public Book getBookById(int id){
+        readFile();
+       return books.stream()
+                .filter(b->b.getId()==id)
+                .findAny()
+                .orElse(null);
+    }
+
+    //Create a new book
+    public void addBook(Book book) throws IOException {
+        readFile();
+        /*
+        Integer maxId =books.stream()
+                .mapToInt(b->b.getId())
+                .max().orElseThrow(NoSuchElementException::new);
+        */
+        books.add(book);
+        writeFile();
+    }
+
+    //Update a book
+    public void updateBook(Book newBook) throws IOException {
+        readFile();
+        Book book = books.stream()
+                .filter(b->b.getId()==newBook.getId())
+                .findAny()
+                .orElse(null);
+        books.set(books.indexOf(book), newBook);
+        writeFile();
+    }
+
+    public void deleteBook(int id) throws IOException {
+        readFile();
+        Book book = books.stream()
+                .filter(b->b.getId()==id)
+                .findAny()
+                .orElse(null);
+        books.remove(book);
+        writeFile();
+    }
+
+    @SneakyThrows
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        books.forEach(book-> {
+            try {
+                String json = objectWriter.writeValueAsString(book);
+                sb.append(json+",\n");
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+        sb.delete(sb.length()-2,sb.length()-1);
+        sb.append(']');
+        return sb.toString();
+    }
+}
