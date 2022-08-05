@@ -1,0 +1,10 @@
+https://github.com/KirillovItstep/classworks/blob/main/%D0%AD%D0%BA%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD/manual.txt
+
+https://github.com/KirillovItstep/QAClassWork    базы данных
+
+https://github.com/KirillovItstep/classworks/blob/main/spring-boot/hello-world-spring-objects.zip
+
+https://github.com/KirillovItstep/classworks/tree/main/shop
+
+
+https://www.easycodeforall.com/SQL-to-Java-DAO-code-generator.html
