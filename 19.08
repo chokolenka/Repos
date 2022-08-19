@@ -1,0 +1,329 @@
+create table employee(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+name VARCHAR(20),
+department_id INTEGER
+);
+
+create table department(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+name VARCHAR(20)
+); 
+
+insert into employee values(?, 'Юлия', 1); 
+insert into employee values(?, 'Федор', 2); 
+insert into employee values(?, 'Алексей', NULL); 
+insert into employee values(?, 'Светлана', 2); 
+
+insert into department values(?, 'Кухня'); 
+insert into department values(?, 'Бар'); 
+insert into department values(?, 'Администрация'); 
+
+--INNER JOIN
+select 
+employee.name
+, 
+department.name
+
+
+from employee
+inner join department on employee.department_id=
+department.id
+; 
+
+
+.mode box 
+
+select 
+employee.name
+, 
+department.name
+
+from department
+left join employee on employee.department_id=
+department.id
+; 
+
+select 
+employee.name
+, 
+department.name
+
+from employee
+left join department on employee.department_id=
+department.id
+
+union all
+select 
+employee.name
+, 
+department.name
+
+from department
+left join employee on employee.department_id=
+department.id
+; 
+
+select 
+employee.name
+, 
+department.name
+
+from employee
+left join department on employee.department_id=
+department.id
+
+union all
+select 
+employee.name
+, 
+department.name
+
+from department
+left join employee on employee.department_id=
+department.id
+
+WHERE  employee.department_id IS NULL; 
+
+
+select 
+employee.name
+, 
+department.name
+
+from employee
+left join department on employee.department_id=
+department.id
+
+except
+select 
+employee.name
+, 
+department.name
+
+from employee
+inner join department on employee.department_id=
+department.id
+; 
+
+
+select 
+employee.name
+, 
+department.name
+
+from employee
+left join department on employee.department_id=
+department.id
+
+where 
+department.id
+ is null; 
+ 
+ select 
+employee.name
+, 
+department.name
+
+from department
+left join employee on employee.department_id=
+department.id
+
+where employee.department_id is null; 
+
+CROSS JOIN 
+
+select 
+employee.name
+, 
+department.name
+
+from employee
+join department; 
+
+SELF JOIN
+
+select 
+e1.name
+, 
+e2.name
+
+from employee e1
+inner join employee e2 
+
+
+select 
+e1.name
+, 
+e2.name
+
+from employee e1
+inner join employee e2
+on 
+e1.name
+<
+e2.name
+; 
+
+
+fetch('http://localhost:8080/users')//   метод get
+  .then(res => res.json())
+  .then(console.log)
+
+  fetch('http://localhost:8080/user/1')
+    .then(res => res.json())
+    .then(console.log)
+
+  fetch('http://localhost:8080/users', // метод post
+  {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({username: 'user1', password: 'user1', email:'email'})
+  })
+  .then(function(res){ console.log(res) })
+
+
+  fetch('http://localhost:8080/users/4', // метод put
+    {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "PUT",
+        body: JSON.stringify({username: 'user1', password: 'user2', email:'email'})
+    })
+    .then(function(res){ console.log(res) })
+    // МЕТОД DELETE
+
+
+    fetch('http://localhost:8080/users/4',
+        {
+            method: "DELETE",
+             })
+			 
+			 
+			 
+package org.itstep.springboot;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class TestApplication {
+    @Autowired
+    private MockMvc mvc;
+
+    @Test
+    @Order(1)
+    public void getJewelries() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/jewelries")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", Matchers.hasSize(2)))
+                .andExpect(jsonPath("$[0].name",
+                        Matchers.equalTo("French Pave Diamond Engagement Ring in Platinum (1/4 ct. tw.)")));
+    }
+
+    @Test
+    @Order(2)
+    public void getJewelriesById() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/jewelries/1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name",
+                        Matchers.equalTo("French Pave Diamond Engagement Ring in Platinum (1/4 ct. tw.)")));
+
+    }
+
+
+    @ParameterizedTest // Создаем параметризованный тест
+    @ValueSource(ints = {-1, 0, 1, 2, Integer.MAX_VALUE})
+    @Order(3)
+    public void getJewelriesById(int id) throws Exception {
+        ResultActions actions = mvc.perform(MockMvcRequestBuilders.get("/jewelries/{id}",id).
+                accept(MediaType.APPLICATION_JSON));
+        actions
+                .andExpect(status().isOk());
+        switch (id){
+            case 1:
+                actions
+                        .andExpect(jsonPath("$.name",
+                                Matchers.equalTo("French Pave Diamond Engagement Ring in Platinum (1/4 ct. tw.)")));
+                break;
+            case 2:
+                actions
+                        .andExpect(jsonPath("$.name",
+                                Matchers.equalTo("Petite Solitaire Engagement Ring in Platinum")));
+                break;
+            default:
+                actions
+                        .andExpect(content().string("null"));
+        }
+    }
+
+    @Test
+    @Order(4)
+    public void postJewelry() throws Exception {
+        mvc.perform(
+                MockMvcRequestBuilders.post
+                        ("/jewelries")
+                        .content(asJsonString(new Jewelry( 4L, "name", "color", 1., 2., new Material(2L,"m"))))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                //.andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", Matchers.equalTo("name")))
+                .andExpect(jsonPath("$.price", Matchers.equalTo(1.)))
+        ;
+    }
+
+    @Test
+    @Order(5)
+    public void putJewelry() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.put("/jewelries/2")
+                .content(asJsonString(new Jewelry( 4L, "name2", "color", 1., 2., new Material(2L,"m"))))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", Matchers.equalTo("name2")))
+                .andExpect(jsonPath("$.price", Matchers.equalTo(1.)))
+        ;
+    }
+
+    @Test
+    @Order(6)
+    public void deleteJewelry() throws Exception
+    {
+        mvc.perform( MockMvcRequestBuilders.delete("/jewelries/2", 1) )
+                .andExpect(status().isOk());
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}			 
+
+
+
